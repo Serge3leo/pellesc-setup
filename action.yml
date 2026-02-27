@@ -80,8 +80,7 @@ runs:
         $LASTEXITCODE = 0
 
     - name: Install module
-      if: ${{ 'always' == inputs.cmake-module ||
-              steps.strings.outputs.dont-pellesc }}
+      if: ${{ 'always' == inputs.cmake-module || steps.outputs.dont-pellesc }}
       shell: pwsh
       run: |
         cmake -P installPellesC.cmake
