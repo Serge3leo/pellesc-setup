@@ -73,14 +73,15 @@ runs:
     - name: Check CMAKE_C_COMPILER_LIST
       if: ${{ 'check' == inputs.cmake-module }}
       shell: pwsh -File {0}
+      id: pellesc
       run: |
         cmake -P detectPellesC.cmake
-        "dont-pellesc=$LASTEXITCODE" `
+        "dont=$LASTEXITCODE" `
           | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
         $LASTEXITCODE = 0
 
     - name: Install module
-      if: ${{ 'always' == inputs.cmake-module || steps.outputs.dont-pellesc }}
+      if: ${{ 'always' == inputs.cmake-module || steps.outputs.pellesc.dont }}
       shell: pwsh
       run: |
         cmake -P installPellesC.cmake
