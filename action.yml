@@ -36,7 +36,7 @@ runs:
         #         pelles-c --version=${{ inputs.version }}
         git lfs pull
         cmake -E md5sum dist\13.01-git\setup.exe
-        dist\13.01-git\setup.exe -S
+        dist\13.01-git\setup.exe /S
         dir "C:\Program Files\PellesC"
         dir "C:\Program Files\PellesC\Bin"
         dir "C:\Program Files\PellesC\Bin\pocc.exe"
