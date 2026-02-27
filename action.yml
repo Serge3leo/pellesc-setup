@@ -77,6 +77,7 @@ runs:
         cmake -P detectPellesC.cmake
         "dont-pellesc=$LASTEXITCODE" `
           | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+        $LASTEXITCODE = 0
 
     - name: Install module
       if: ${{ 'always' == inputs.cmake-module ||
