@@ -37,6 +37,9 @@ runs:
         git lfs pull
         cmake -E md5sum dist\13.01-git\setup.exe
         dist\13.01-git\setup.exe -S
+        dir "C:\Program Files\PellesC"
+        dir "C:\Program Files\PellesC\Bin"
+        dir "C:\Program Files\PellesC\Bin\pocc.exe"
           # Hardcoded "%PellesCDir%\povars64.bat"
         $PellesCDir = "C:\Program Files\PellesC"
         "PellesCDir=$PellesCDir`n" + `
