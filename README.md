@@ -16,7 +16,7 @@ or
   - uses: Serge3leo/pellesc-msys2@v0
     with:
       version: 12.0.2
-      verbose: on
+      verbose: true
 ```
 
 An example with a CMake project can be see:
@@ -25,14 +25,30 @@ An example with a CMake project can be see:
     https://github.com/Serge3leo/countof_ns/blob/main/.github/workflows/cmake-multi-platform.yml).
 
 # Options
-## version
+## cmake-module
   - Type: `string`
+  - Allowed values: `check | always | not`
+  - Default: `check`
 
-If not specified, version 13.01 from this repository is installed (Dec 23, 2025
-[https://www.pellesc.se](https://www.pellesc.se), it not at Chocolatey
-Community).  Otherwise, the specified version will be installed.  The list of
-available versions is given below:
-[https://community.chocolatey.org/packages/pelles-c](https://community.chocolatey.org/packages/pelles-c).
+### always
+Always install the Pelles C support modules.
+
+### check
+Check the variable `CMAKE_C_COMPILER_LIST`.  Install Pelles C support modules
+if this variable do not contain `PellesC`.
+
+### no
+Do not install Pelles C support modules.
+
+## msystem
+  - Type: `string`
+  - Allowed values: `msys | mingw64 | mingw32 | ucrt64 |
+    clang64 | clangarm64 | skip`
+  - Default: `ucrt64`
+
+Sets the value of the environment variable [`MSYSTEM`](
+https://www.msys2.org/docs/environments) and `PATH`.  Case is ignored.  If
+equal to `skip`, then the MSYS2 configuration is skipped.
 
 ## verbose
   - Type: `boolean`
@@ -40,13 +56,15 @@ available versions is given below:
 
 Show the paths and versions of the main components: `pocc`, `make`, `cmake`, ...
 
-## cmake-module
+## version
   - Type: `string`
-  - Allowed values: `check | always | not`
-  - Default: `check`
+  - Default: `13.01-git-lfs`
 
-Check the variable `CMAKE_C_COMPILER_LIST`.  Install Pelles C support modules
-if this variable do not contain `PellesC`.
+If not specified, version `13.01-git-lfs` from this repository is installed
+(13.01, Dec 23, 2025 [https://www.pellesc.se](https://www.pellesc.se), it not
+at Chocolatey Community).  Otherwise, the specified version will be installed.
+The list of available versions is given below:
+[https://community.chocolatey.org/packages/pelles-c](https://community.chocolatey.org/packages/pelles-c).
 
 # Contributing
 Issues or PRs are accepted and welcome.

@@ -2,44 +2,62 @@
 name: PellesC MSYS2
 description: Setup Pelles C with pre-installed MSYS2 for CMake
 inputs:
-  version:
+  cmake-module:
+    required: false
+    description: Check CMAKE_C_COMPILER_LIST, install module, if not `PellesC`
+    default: 'check'
+  msystem:
     required: false
     description: >
-      A specific version to install. Defaults to GitHub mirrored.
+      Variant of the environment to set by default: msys, mingw32, mingw64,
+      ucrt64, clang64, clangarm64 or skip
+    default: 'ucrt64'
   verbose:
     required: false
     description: >
       Show version and location `pocc`, `make`,
       `cmake` ... form PATH. ['off', 'on']
     default: false
-  cmake-module:
+  version:
     required: false
-    description: Check CMAKE_C_COMPILER_LIST, install module, if not `PellesC`
-    default: 'check'
+    description: >
+      A specific version to install. Defaults to GitHub mirrored.
+    default: '13.01-git-lfs'
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v6  # TODO: need only for *-git-lfs
+    - name: Checkout
+      if: ${{ endsWith(inputs.version, '-git-lfs') ||
+              inputs.cmake-module != 'no' }}
+      uses: actions/checkout@v6
+
+    - name: GitHub LFS pull
+      if: ${{ endsWith(inputs.version, '-git-lfs') }}
+      shell: pwsh
+      run: git lfs pull
 
     - name: MSYS2 PATH
+      if: ${{ 'skip' != inputs.msystem }}
       shell: pwsh
       run: |
-        "MSYSTEM=UCRT64" `
+        $base = "C:\msys64\"
+        $msys = "${{ inputs.msystem }}".ToLower()
+        "MSYSTEM=" + $msys.ToUpper() `
           | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        "C:\msys64\usr\bin`nC:\msys64\ucrt64\bin" `
+        "$base\$msys\bin`n$base\usr\bin`n" `
           | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-    - name: Install MSYS make, ar, etc
+    - name: Install Pelles C, MSYS make, ar, etc
       shell: pwsh
       run: |
-        # choco install --yes --no-progress `
-        #         pelles-c --version=${{ inputs.version }}
-        git lfs pull
-        cmake -E md5sum dist\13.01-git\setup.exe
-        Start-Process "dist\13.01-git\setup.exe" "/S" -Wait -Verb runas
-        dir "C:\Program Files\PellesC"
-        dir "C:\Program Files\PellesC\Bin"
-        dir "C:\Program Files\PellesC\Bin\pocc.exe"
+        $ver = "${{ inputs.version }}"
+        $setup = "dist\$ver\setup.exe"
+        if (Test-Path -Path $setup -PathType Leaf) {
+          cmake -E md5sum $setup
+          Start-Process $setup "/S" -Wait -Verb runas
+        } else {
+          choco install --yes --no-progress pelles-c --version=$ver
+        }
           # Hardcoded "%PellesCDir%\povars64.bat"
         $PellesCDir = "C:\Program Files\PellesC"
         "PellesCDir=$PellesCDir`n" + `
@@ -48,13 +66,19 @@ runs:
           | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "$PellesCDir\Bin" `
           | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        pacman -S --noconfirm binutils make
+        if ("skip" -ne "${{ inputs.msystem }}) {
+          pacman -S --noconfirm binutils make
+        }
 
     - name: Check CMAKE_C_COMPILER_LIST
       if: ${{ 'check' == inputs.cmake-module }}
-      shell: pwsh
+      shell: cmake -P {0}
       run: |
-        "TODO check CMAKE_C_COMPILER_LIST"
+        message("CMAKE_C_COMPILER_LIST=${CMAKE_C_COMPILER_LIST}")
+        if (NOT CMAKE_C_COMPILER_LIST MATCHES "Clang")
+            message(FATAL_ERROR "Don't have PellesC")
+        endif ()
+        message("OK: PellesC")
 
     - name: Install module
       if: ${{ 'always' == inputs.cmake-module || failure() }}
@@ -70,15 +94,15 @@ runs:
         "INCLUDE=$env:INCLUDE"
         "LIB=$env:LIB"
         get-command pocc
-        pocc -?
-        "MSYSTEM=$env:MSYSTEM"
-        get-command ar
-        ar --version
-        get-command make
-        make --version
-        get-command cmake
-        cmake --version
-        get-command choco
-        choco --version
-        get-command pacman
-        pacman -V
+        pocc | Select-Object -First 1
+        if ("skip" -ne "${{ inputs.msystem }}) {
+          "MSYSTEM=$env:MSYSTEM"
+          get-command pacman
+          pacman -V  | Select-Object -First 2
+        }
+        foreach ($prg in 'ar', 'make', 'cmake', 'choco', 'notfnd', 'ar' ) {
+          try {
+            get-command $prg
+            &$prg --version | Select-Object -First 1
+          } catch {}
+        }
