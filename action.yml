@@ -72,8 +72,11 @@ runs:
 
     - name: Check CMAKE_C_COMPILER_LIST
       if: ${{ 'check' == inputs.cmake-module }}
-      shell: cmake -P {0}
+      shell: pwsh
       run: |
+        cmake -P detectPellesC.cmake
+        "dont-pellesc=$LASTEXITCODE" `
+          | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
         message("CMAKE_C_COMPILER_LIST=${CMAKE_C_COMPILER_LIST}")
         if (NOT CMAKE_C_COMPILER_LIST MATCHES "Clang")
             message(FATAL_ERROR "Don't have PellesC")
@@ -81,10 +84,10 @@ runs:
         message("OK: PellesC")
 
     - name: Install module
-      if: ${{ 'always' == inputs.cmake-module || failure() }}
+      if: ${{ 'always' == inputs.cmake-module || steps.strings.outputs.dont-pellesc }}
       shell: pwsh
       run: |
-        "TODO install module"
+        cmake -P installPellesC.cmake
 
     - name: Show version
       if: ${{ fromJSON(inputs.verbose) }}
