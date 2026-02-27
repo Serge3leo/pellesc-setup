@@ -1,15 +1,13 @@
-# vim:set sw=4 ts=8 et fileencoding=utf8::Кодировка:UTF-8[АБЁЪЯабёъя]
+# vim:set sw=4 ts=8 et fileencoding=utf8:
 # SPDX-License-Identifier: BSD-2-Clause
-# SPDX-FileCopyrightText: 2025 Сергей Леонтьев (leo@sai.msu.ru)
-# История:
-# 2025-12-11 12:01:02 - Создан.
+# SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
 cmake_minimum_required (VERSION 3.25)
-project(orangec_msys2
+project(pellesc_msys2
         VERSION 0.1.0
         DESCRIPTION
-        "Use OrangeC in CMake project"
-        HOMEPAGE_URL https://github.com/Serge3leo/orangec-msys2.git
+        "Use PellesC in CMake project"
+        HOMEPAGE_URL https://github.com/Serge3leo/pellesc-msys2.git
         LANGUAGES C)
 
 add_executable(hello hello.c)

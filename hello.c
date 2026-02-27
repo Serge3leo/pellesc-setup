@@ -1,13 +1,13 @@
-// vim:set sw=4 ts=8 et fileencoding=utf8::Кодировка:UTF-8[АБЁЪЯабёъя]
+// vim:set sw=4 ts=8 et fileencoding=utf8:
 // SPDX-License-Identifier: BSD-2-Clause
 // SPDX-FileCopyrightText: 2025 Сергей Леонтьев (leo@sai.msu.ru)
-// История:
-// 2025-12-11 11:41:33 - Создан.
 
 #include <stdio.h>
 
 int main(void) {
     printf("Привет мир\nМы из ");
+    #if __POCC__
+        printf("__POCC__ %d\n", __POCC__);
     #if __ORANGEC__
         printf("__ORANGEC_MAJOR__.__ORANGEC_MINOR__ %d.%d\n",
                 __ORANGEC_MAJOR__, __ORANGEC_MINOR__);

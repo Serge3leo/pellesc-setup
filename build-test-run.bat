@@ -1,7 +1,7 @@
 @echo on
 rem vim:set sw=4 ts=8 et fileencoding=utf8:
 rem SPDX-License-Identifier: BSD-2-Clause
-rem SPDX-FileCopyrightText: 2025 Сергей Леонтьев (leo@sai.msu.ru)
+rem SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
 set build_type=Release
 set build_output_dir=build\pocc
@@ -17,6 +17,4 @@ cd %build_output_dir%
 ctest --build-config %build_type%
 if errorlevel 1 exit /b
 hello
-if errorlevel 1 exit /b
-hello++
 if errorlevel 1 exit /b

@@ -1,9 +1,9 @@
 # vim:set sw=4 ts=8 et fileencoding=utf8:
 # SPDX-License-Identifier: BSD-2-Clause
-# SPDX-FileCopyrightText: 2025 Сергей Леонтьев (leo@sai.msu.ru)
+# SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
 set(PellesC_ID "PellesC")
-message("CMAKE_ROOT=${CMAKE_ROOT}")
+message("detect: CMAKE_ROOT=${CMAKE_ROOT}")
 file(READ ${CMAKE_ROOT}/Modules/CMakeCompilerIdDetection.cmake idm)
 if (NOT idm MATCHES "\n[ \t]+${PellesC_ID}[ \t]*\n")
     message("FAIL, Don't detect PellesC_ID='${PellesC_ID}'")
