@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2025 Сергей Леонтьев (leo@sai.msu.ru)
 
-set(PellesC_ID "PellesC")
+set(PellesC_ID "Clang")
 message("CMAKE_ROOT=${CMAKE_ROOT}")
 file(READ ${CMAKE_ROOT}/Modules/CMakeCompilerIdDetection.cmake idm)
 if (NOT idm MATCHES "\n[ \t]+${PellesC_ID}[ \t]*\n")
