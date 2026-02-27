@@ -4,7 +4,7 @@ description: Setup Pelles C with pre-installed MSYS2 for CMake
 inputs:
   cmake-module:
     required: false
-    description: Check CMAKE_C_COMPILER_LIST, install module, if not `PellesC`
+    description: Check PellesC modules, install, if not
     default: 'check'
   msystem:
     required: false
@@ -23,6 +23,7 @@ inputs:
     description: >
       A specific version to install. Defaults to GitHub mirrored.
     default: '13.01-git-lfs'
+
 runs:
   using: composite
   steps:
@@ -70,27 +71,28 @@ runs:
           pacman -S --noconfirm binutils make
         }
 
-    - name: Check CMAKE_C_COMPILER_LIST
+    - name: Check PellesC modules
       if: ${{ 'check' == inputs.cmake-module }}
       shell: pwsh -File {0}
       id: pellesc
       run: |
-        cmake -P detectPellesC.cmake
+        cmake -P PellesC/detect.cmake
         "dont=$LASTEXITCODE" `
           | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
         $LASTEXITCODE = 0
 
-    - name: Install module
+    - name: Install PellesC modules
       if: ${{ 'always' == inputs.cmake-module || steps.pellesc.outputs.dont }}
       shell: pwsh
       run: |
-        cmake -P installPellesC.cmake
+        cmake -P PellesC/install.cmake
 
     - name: Show version
       if: ${{ fromJSON(inputs.verbose) }}
       shell: pwsh
       run: |
         "PATH=$env:PATH"
+        "---"
         "PellesCDir=$env:PellesCDir"
         "INCLUDE=$env:INCLUDE"
         "LIB=$env:LIB"
@@ -101,7 +103,7 @@ runs:
           get-command pacman
           pacman -V  | Select-Object -First 2
         }
-        foreach ($prg in 'ar', 'make', 'cmake', 'choco', 'notfnd', 'ar' ) {
+        foreach ($prg in 'ar', 'make', 'cmake', 'choco') {
           try {
             get-command $prg
             &$prg --version | Select-Object -First 1
