@@ -8,6 +8,7 @@ int main(void) {
     printf("Привет мир\nМы из ");
     #if __POCC__
         printf("__POCC__ %d\n", __POCC__);
+    #endif
     #if __ORANGEC__
         printf("__ORANGEC_MAJOR__.__ORANGEC_MINOR__ %d.%d\n",
                 __ORANGEC_MAJOR__, __ORANGEC_MINOR__);

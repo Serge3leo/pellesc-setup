@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
-set(id_pellesc "PellesC")
+set(_id_pellesc_ "PellesC")
 set(id_prev "TinyCC")
 set(id_next "Bruce")
 
@@ -14,14 +14,14 @@ string(REGEX REPLACE
        "(\n[ \t]+${id_prev}[ \t]*\n).*#.*patch.*\n([ \t]+${id_next}[ \t]*\n)"
        "\\1\\2"
        idm_n "${idm}")
-string(FIND "${idm_n}" "${id_pellesc}" c_pellesc)
+string(FIND "${idm_n}" "${_id_pellesc_}" c_pellesc)
 if (NOT (NOT idm STREQUAL idm_n AND
          -1 EQUAL c_pellesc))
-    message(FATAL_ERROR "Can't uninstall ${id_pellesc} modules")
+    message(FATAL_ERROR "Can't uninstall ${_id_pellesc_} modules")
 endif ()
 
 file(GLOB_RECURSE ufs LIST_DIRECTORIES false
-     "${CMAKE_ROOT}/Modules/*${id_pellesc}*.cmake")
+     "${CMAKE_ROOT}/Modules/*${_id_pellesc_}*.cmake")
 foreach (f IN LISTS ufs)
     message("${f}")
     file(REMOVE "${f}")
