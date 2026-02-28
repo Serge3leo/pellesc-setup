@@ -1,3 +1,67 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.elf
+*.ko
+*.lo
+*.o
+*.obj
+*.slo
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Linker files
+*.exp
+*.ilk
+*.map
+
+# Debugger Files
+*.dSYM/
+*.idb
+*.pdb
+*.su
+
+# Compiled Dynamic libraries
+*.dll
+*.dylib
+*.so
+*.so.*
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.a
+*.la
+*.lai
+*.lo
+*.lib
+
+# Executables
+*.app
+*.exe
+*.hex
+*.i*86
+*.out
+*.x86_64
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# debug information files
+*.dwo
+
+# CMake.gitignore
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
@@ -17,3 +81,6 @@ CMakeUserPresets.json
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #cmake-build-*
+
+# vim files
+*.swp

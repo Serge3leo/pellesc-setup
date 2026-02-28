@@ -1,0 +1,112 @@
+---
+name: PellesC MSYS2
+description: Setup Pelles C with pre-installed MSYS2 for CMake
+inputs:
+  cmake-module:
+    required: false
+    description: Check PellesC modules, install, if not
+    default: 'check'
+  msystem:
+    required: false
+    description: >
+      Variant of the environment to set by default: msys, mingw32, mingw64,
+      ucrt64, clang64, clangarm64 or skip
+    default: 'ucrt64'
+  verbose:
+    required: false
+    description: >
+      Show version and location `pocc`, `make`,
+      `cmake` ... form PATH. ['off', 'on']
+    default: false
+  version:
+    required: false
+    description: >
+      A specific version to install. Defaults to GitHub mirrored.
+    default: '13.01-git-lfs'
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      if: ${{ endsWith(inputs.version, '-git-lfs') ||
+              inputs.cmake-module != 'no' }}
+      uses: actions/checkout@v6
+
+    - name: GitHub LFS pull
+      if: ${{ endsWith(inputs.version, '-git-lfs') }}
+      shell: pwsh
+      run: git lfs pull
+
+    - name: MSYS2 PATH
+      if: ${{ 'skip' != inputs.msystem }}
+      shell: pwsh
+      run: |
+        $base = "C:\msys64"
+        $msys = "${{ inputs.msystem }}".ToLower()
+        "MSYSTEM=" + $msys.ToUpper() `
+          | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "$base\$msys\bin`n$base\usr\bin`n" `
+          | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+    - name: Install Pelles C, MSYS make, ar, etc
+      # TODO now PellesC `cc` must be before any `cc` (MSYS et all)
+      shell: pwsh
+      run: |
+        $ver = "${{ inputs.version }}"
+        $setup = "dist\$ver\setup.exe"
+        if (Test-Path -Path $setup -PathType Leaf) {
+          cmake -E md5sum $setup
+          Start-Process $setup "/S" -Wait -Verb runas
+        } else {
+          choco install --yes --no-progress pelles-c --version=$ver
+        }
+          # Hardcoded "%PellesCDir%\povars64.bat"
+        $PellesCDir = "C:\Program Files\PellesC"
+        "PellesCDir=$PellesCDir`n" + `
+        "INCLUDE=$PellesCDir\Include;$PellesCDir\Include\Win;$env:INCLUDE`n" + `
+        "LIB=$PellesCDir\Lib;$PellesCDir\Lib\Win64;$env:LIB`n"
+          | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "$PellesCDir\Bin" `
+          | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        if ("skip" -ne "${{ inputs.msystem }}") {
+          pacman -S --noconfirm binutils make
+        }
+
+    - name: Check PellesC modules
+      if: ${{ 'check' == inputs.cmake-module }}
+      shell: pwsh -File {0}
+      id: pellesc
+      run: |
+        cmake -P PellesC/detect.cmake
+        "dont=$LASTEXITCODE" `
+          | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+        $LASTEXITCODE = 0
+
+    - name: Install PellesC modules
+      if: ${{ 'always' == inputs.cmake-module || steps.pellesc.outputs.dont }}
+      shell: pwsh
+      run: |
+        cmake -P PellesC/install.cmake
+
+    - name: Show version
+      if: ${{ fromJSON(inputs.verbose) }}
+      shell: pwsh
+      run: |
+        "PATH=$env:PATH"
+        "---"
+        "PellesCDir=$env:PellesCDir"
+        "INCLUDE=$env:INCLUDE"
+        "LIB=$env:LIB"
+        get-command pocc
+        pocc | Select-Object -First 1
+        if ("skip" -ne "${{ inputs.msystem }}") {
+          "MSYSTEM=$env:MSYSTEM"
+          get-command pacman
+          pacman -V  | Select-Object -First 2
+        }
+        foreach ($prg in 'ar', 'make', 'cmake', 'choco') {
+          try {
+            get-command $prg
+            &$prg --version | Select-Object -First 1
+          } catch {}
+        }
