@@ -114,8 +114,8 @@ jobs:
         # required if you are using a single-configuration generator such as
         # make.  See
         # https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        # shell: pwsh  # Required $env:PellesCDir\Bin\cc.exe
-        shell: bash  # Required $PellesCDir\Bin\cc.exe
+        shell: pwsh  # Required $env:PellesCDir\Bin\cc.exe
+        # shell: bash  # Detect `cc` - Ok, but build false, may be need all bash
         # "-DCMAKE_C_COMPILER=${{ matrix.c_compiler }}"
         # shell: msys2bash.cmd  # TODO: uncheck
         # shell: cmd  # cmake 4.2.3 Ok
