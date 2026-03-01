@@ -84,3 +84,7 @@ CMakeUserPresets.json
 
 # vim files
 *.swp
+
+# Local bat
+??.bat
+??.sh

@@ -3,15 +3,15 @@
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 include_guard()
 
-set(_id_pellesc_ "PellesC")
-message("PellesC: CMAKE_ROOT=${CMAKE_ROOT}")
+# TODO set(_id_pellesc_ "PellesC")
+# TODO message("PellesC: CMAKE_ROOT=${CMAKE_ROOT}")
 
 macro(__compiler_pellesc lang)
   if ("x${lang}" STREQUAL "xC")
     # TODO set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE "<CMAKE_${lang}_COMPILER> ${_ORANGEC_COMPILE_${lang}} -! <SOURCE> <DEFINES> <INCLUDES> <FLAGS> +i -o <PREPROCESSED_SOURCE>")
     # TODO set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE     "<CMAKE_${lang}_COMPILER> ${_ORANGEC_COMPILE_${lang}} -! <SOURCE> <DEFINES> <INCLUDES> <FLAGS> -S -o <ASSEMBLY_SOURCE>")
   endif ()
-  set(CMAKE_C_COMPILE_OBJECT "<CMAKE_C_COMPILER> -c <DEFINES> <INCLUDES> <FLAGS> <SOURCE> -Fo <OBJECT>")
+  set(CMAKE_C_COMPILE_OBJECT "<CMAKE_C_COMPILER> -c <DEFINES> <INCLUDES> <FLAGS> <SOURCE> -Fo<OBJECT>")
 
   # TODO ASM check
   set(CMAKE_DEPFILE_FLAGS_${lang} "-M -Fo<DEP_TARGET> > <DEP_FILE>")

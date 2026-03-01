@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
-set(_id_pellesc_ "PellesC")
-message("Windows-PellesC-C: CMAKE_ROOT=${CMAKE_ROOT}")
+# set(_id_pellesc_ "PellesC")
+# message("Windows-PellesC-C: CMAKE_ROOT=${CMAKE_ROOT}")
 
 set(CMAKE_LINK_LIBRARY_SUFFIX "")
 set(CMAKE_STATIC_LIBRARY_SUFFIX ".lib")

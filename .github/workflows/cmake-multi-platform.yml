@@ -42,7 +42,8 @@ jobs:
       # customize the build_type list.
 
       matrix:
-        c_compiler: [pocc]
+        # c_compiler: [pocc]
+        c_compiler: [cc]
         # os: [windows-2025-vs2026, windows-2025, windows-2022]
         os: [windows-latest]
         build_type: [Release]
@@ -84,6 +85,29 @@ jobs:
         with:
           # version: 12.0.2
           verbose: true
+
+      - name: Check Pelles C long name bug in `cc`
+        shell: pwsh -File {0}
+        run: |
+          $exitcode = 0
+          cc hello.c
+          if ($LASTEXITCODE) {
+            $exitcode = $LASTEXITCODE
+            "`"cc hello.c`": FAIL $LASTEXITCODE"
+          }
+          "$PellesCDirLong\Bin\cc.exe" hello.c
+          if ($LASTEXITCODE) {
+            "`"$PellesCDirLong\Bin\cc.exe hello.c`": Expected $LASTEXITCODE"
+          } else {
+            $exitcode = 1
+          }
+          "$PellesCDir\Bin\cc.exe" hello.c
+          if ($LASTEXITCODE) {
+            $exitcode = $LASTEXITCODE
+            "`"$PellesCDir\Bin\cc.exe hello.c`": FAIL $LASTEXITCODE"
+          }
+          del hello.obj
+          $LASTEXITCODE = $exitcode
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only

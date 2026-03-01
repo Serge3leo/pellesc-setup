@@ -60,8 +60,11 @@ runs:
         } else {
           choco install --yes --no-progress pelles-c --version=$ver
         }
-          # Hardcoded "%PellesCDir%\povars64.bat"
-        $PellesCDir = "C:\Program Files\PellesC"
+          # Hardcoded "%PellesCDir%\povars64.bat" with workaround for SFN
+        $PellesCDirLong = "C:\Program Files\PellesC"
+        $PellesCDir=(cmd.exe /c `
+                     "@for %I in (`"$PellesCDirLong`") do @echo %~sI")
+        "PellesCDirLong=$PellesCDirLong`n" + `
         "PellesCDir=$PellesCDir`n" + `
         "INCLUDE=$PellesCDir\Include;$PellesCDir\Include\Win;$env:INCLUDE`n" + `
         "LIB=$PellesCDir\Lib;$PellesCDir\Lib\Win64;$env:LIB`n"
