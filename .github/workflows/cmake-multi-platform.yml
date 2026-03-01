@@ -122,7 +122,7 @@ jobs:
         shell: cmd
         run: >
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
-          "-DCMAKE_C_COMPILER=%PellesCDir%\Bin\cc.exe"
+          "-DCMAKE_C_COMPILER=${{ matrix.c_compiler }}"
           "-DCMAKE_BUILD_TYPE=${{ matrix.build_type }}"
           -G "${{ matrix.generator }}"
           -S "${{ github.workspace }}"
