@@ -95,16 +95,16 @@ jobs:
             $exitcode = $LASTEXITCODE
             "`"cc hello.c`": FAIL $LASTEXITCODE"
           }
-          &"$PellesCDirLong\Bin\cc.exe" hello.c
+          &"$env:PellesCDirLong\Bin\cc.exe" hello.c
           if ($LASTEXITCODE) {
-            "`"$PellesCDirLong\Bin\cc.exe hello.c`": Expected $LASTEXITCODE"
+            "`"$env:PellesCDirLong\Bin\cc.exe hello.c`": Expected $LASTEXITCODE"
           } else {
             $exitcode = 1
           }
-          &"$PellesCDir\Bin\cc.exe" hello.c
+          &"$env:PellesCDir\Bin\cc.exe" hello.c
           if ($LASTEXITCODE) {
             $exitcode = $LASTEXITCODE
-            "`"$PellesCDir\Bin\cc.exe hello.c`": FAIL $LASTEXITCODE"
+            "`"$env:PellesCDir\Bin\cc.exe hello.c`": FAIL $LASTEXITCODE"
           }
           del hello.obj
           $LASTEXITCODE = $exitcode
