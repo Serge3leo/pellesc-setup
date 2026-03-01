@@ -42,16 +42,13 @@ jobs:
       # customize the build_type list.
 
       matrix:
-        # c_compiler: [pocc]
-        c_compiler: [cc]
-        # os: [windows-2025-vs2026, windows-2025, windows-2022]
         os: [windows-latest]
+        c_compiler: [cc]
         build_type: [Release]
+        # c_compiler: [pocc]
+        # os: [windows-2025-vs2026, windows-2025, windows-2022]
         include:
           - c_compiler: cc
-            generator: "MSYS Makefiles"
-            platform: "win32"
-          - c_compiler: pocc
             generator: "MSYS Makefiles"
             platform: "win32"
 
