@@ -118,13 +118,15 @@ jobs:
         # shell: bash  # Required $PellesCDir\Bin\cc.exe
         # "-DCMAKE_C_COMPILER=${{ matrix.c_compiler }}"
         # shell: msys2bash.cmd  # TODO: uncheck
+        # shell: cmd  # Required %PellesCDir%\Bin\cc.exe  # But Win10 work?
         shell: cmd
-        run: |
-          set
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} ^
-            -G "${{ matrix.generator }}" ^
-            -S "${{ github.workspace }}" ^
-            ${{ matrix.cmake_add }}
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          "-DCMAKE_C_COMPILER=%PellesCDir%\Bin\cc.exe"
+          "-DCMAKE_BUILD_TYPE=${{ matrix.build_type }}"
+          -G "${{ matrix.generator }}"
+          -S "${{ github.workspace }}"
+          ${{ matrix.cmake_add }}
 
       - name: Build
         # Build your program with the given configuration. Note that --config
