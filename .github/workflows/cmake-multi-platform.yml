@@ -115,10 +115,12 @@ jobs:
         # make.  See
         # https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         # shell: pwsh  # Required $env:PellesCDir\Bin\cc.exe
+        # shell: bash  # Required $PellesCDir\Bin\cc.exe
+        # "-DCMAKE_C_COMPILER=${{ matrix.c_compiler }}"
         shell: bash
         run: >
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
-          "-DCMAKE_C_COMPILER=${{ matrix.c_compiler }}"
+          "-DCMAKE_C_COMPILER=$PellesCDir\Bin\cc.exe"
           "-DCMAKE_BUILD_TYPE=${{ matrix.build_type }}"
           -G "${{ matrix.generator }}"
           -S "${{ github.workspace }}"
