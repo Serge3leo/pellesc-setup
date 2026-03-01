@@ -117,10 +117,10 @@ jobs:
 
         run: >
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          -DCMAKE_C_COMPILER="$env:PellesCDir\Bin\cc.exe"
+          "-DCMAKE_BUILD_TYPE=${{ matrix.build_type }}"
+          "-DCMAKE_C_COMPILER=$env:PellesCDir\Bin\cc.exe"
           -G "${{ matrix.generator }}"
-          -S ${{ github.workspace }}
+          -S "${{ github.workspace }}"
           ${{ matrix.cmake_add }}
 
       - name: Build

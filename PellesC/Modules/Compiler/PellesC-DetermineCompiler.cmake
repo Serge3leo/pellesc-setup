@@ -7,8 +7,8 @@
 
 # Pelles C bug (TODO: ID & versions)
 string(TOLOWER "${CMAKE_C_COMPILER}" _pellesc_lower_)
-if ( "${_pellesc_lower_}" MATCHES " .*pelles *c.bin.cc")
-  message("WARNING: PellesC have space in CMAKE_C_COMPILER=\"${CMAKE_C_COMPILER}\", use SFN: C:\\PROGRA~1\\PellesC\\Bin")
+if ("${_pellesc_lower_}" MATCHES " .*pelles *c.bin.cc")
+  message("WARNING: PellesC have space in CMAKE_C_COMPILER=\"${CMAKE_C_COMPILER}\", use SFN: <DRIVE>:\\PROGRA~1\\PellesC\\Bin...")
 endif ()
 
 set(_compiler_id_pp_test "defined(__POCC__)")
