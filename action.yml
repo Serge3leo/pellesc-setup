@@ -74,6 +74,7 @@ runs:
         if ("skip" -ne "${{ inputs.msystem }}") {
           pacman -S --noconfirm binutils make
         }
+        choco install --yes --no-progress cmake
 
     - name: Check PellesC modules
       if: ${{ 'check' == inputs.cmake-module }}
