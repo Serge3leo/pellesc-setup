@@ -50,7 +50,7 @@ runs:
         "MSYSTEM=" + $msys.ToUpper() `
           | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "MINGW_PACKAGE_PREFIX=" + `
-          ("mingw64 -eq $msys ? "mingw-w64-x86_64" `
+          ("mingw64" -eq $msys ? "mingw-w64-x86_64" `
           :"ucrt64" -eq $msys ? "mingw-w64-ucrt-x86_64" `
           :"clang64" -eq $msys ? "mingw-w64-clang-x86_64" `
           :"mingw32" -eq $msys ? "mingw-w64-i686" `
