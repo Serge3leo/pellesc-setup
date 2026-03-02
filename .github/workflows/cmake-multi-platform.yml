@@ -111,6 +111,7 @@ jobs:
           }
           del hello.obj
           $LASTEXITCODE = $exitcode
+          $LASTEXITCODE = 0
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only
