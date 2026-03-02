@@ -121,8 +121,7 @@ jobs:
         run: >
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
           ${{ (matrix.c_compiler &&
-               format('-DCMAKE_C_COMPILER={0}', matrix.c_compiler))
-              || '' }}
+               format('-DCMAKE_C_COMPILER={0}', matrix.c_compiler)) || '' }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -G "${{ matrix.generator }}"
           -S "${{ github.workspace }}"
