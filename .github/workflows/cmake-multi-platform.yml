@@ -42,15 +42,17 @@ jobs:
       # customize the build_type list.
 
       matrix:
-        os: [windows-latest]
-        c_compiler: [cc]
         build_type: [Release]
+        generator: ["MSYS Makefiles"]
+        platform: ["win32"]
         # TODO: c_compiler: [pocc]
-        # TODO: os: [windows-2025-vs2026, windows-2025, windows-2022]
+        os: [windows-2025-vs2026, windows-2025, windows-2022]
         include:
-          - c_compiler: cc
-            generator: "MSYS Makefiles"
-            platform: "win32"
+          - os: windows-2025
+            c_compiler: ''
+            version:
+          - os:
+
 
     steps:
       - uses: actions/checkout@v6
@@ -115,9 +117,11 @@ jobs:
         # required if you are using a single-configuration generator such as
         # make.  See
         # https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+
         run: >
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
-          "-DCMAKE_C_COMPILER=${{ matrix.c_compiler }}"
+          $${ case('' == matrix.c_compiler, '',
+                   '-DCMAKE_C_COMPILER=' + matrix.c_compiler) }}"
           "-DCMAKE_BUILD_TYPE=${{ matrix.build_type }}"
           -G "${{ matrix.generator }}"
           -S "${{ github.workspace }}"

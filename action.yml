@@ -15,7 +15,7 @@ inputs:
     description: >
       Variant of the environment to set by default: msys, mingw32, mingw64,
       ucrt64, clang64, clangarm64 or skip
-    default: 'ucrt64'
+    default: mingw64
   verbose:
     required: false
     description: >
@@ -49,6 +49,15 @@ runs:
         $msys = "${{ inputs.msystem }}".ToLower()
         "MSYSTEM=" + $msys.ToUpper() `
           | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "MINGW_PACKAGE_PREFIX=" + `
+          ("mingw64 -eq $msys ? "mingw-w64-x86_64" `
+          :"ucrt64" -eq $msys ? "mingw-w64-ucrt-x86_64" `
+          :"clang64" -eq $msys ? "mingw-w64-clang-x86_64" `
+          :"mingw32" -eq $msys ? "mingw-w64-i686" `
+          :"clang32" -eq $msys ? "mingw-w64-clang-i686" `
+          :"clangarm64" -eq $msys ? "mingw-w64-clang-aarch64" `
+          : "") `
+          | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "$base\$msys\bin`n$base\usr\bin`n" `
           | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
@@ -76,7 +85,9 @@ runs:
         "$PellesCDir\Bin" `
           | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         if ("skip" -ne "${{ inputs.msystem }}") {
-          pacman -S --noconfirm binutils make
+          pacman -S --noconfirm `
+            $env:MINGW_PACKAGE_PREFIX + "binutils" `
+            $env:MINGW_PACKAGE_PREFIX + "make"
         }
         if ($${{ fromJSON(inputs.cmake-update) }}) {
           choco install --yes --no-progress cmake

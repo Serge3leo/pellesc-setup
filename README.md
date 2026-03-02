@@ -5,6 +5,19 @@ Installs the Pelles C compiler and configures paths and environment variables
 for the possibility of using the CMake generator "MSYS Makefiles" with the
 pre-installed MSYS2 image.
 
+## WARNING
+The `cc` command has an bug if it is called with an explicit path that contains
+spaces. Therefore, CMake cannot use it, and only the explicit call `cmake ...
+-DCMAKE_C_COMPILER=pocc ...` works. For an example of this error, see the step
+`Check workaround Pelles C long name bug` in
+[cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml).
+
+To workaround this error, you need to:
+1. Use paths without spaces, such as Short File Name (SFN,
+   `C:\PROGRA~1\PellesC\Bin`);
+2. Update the CMake version using the `cmake-update: true` parameter, as
+   described below.
+
 # Usage
 ```
   - uses: Serge3leo/pellesc-msys2@v0
@@ -40,11 +53,18 @@ if this variable do not contain `PellesC`.
 ### no
 Do not install Pelles C support modules.
 
+## cmake-update
+  - Type: `boolean`
+  - Default: `false`
+
+Update the version of CMake from the Chocolatey Software, Inc. repository to
+the latest available version.
+
 ## msystem
   - Type: `string`
   - Allowed values: `msys | mingw64 | mingw32 | ucrt64 |
     clang64 | clangarm64 | skip`
-  - Default: `ucrt64`
+  - Default: `mingw64`
 
 Sets the value of the environment variable [`MSYSTEM`](
 https://www.msys2.org/docs/environments) and `PATH`.  Case is ignored.  If
