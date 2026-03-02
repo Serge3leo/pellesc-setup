@@ -42,24 +42,23 @@ jobs:
       # customize the build_type list.
 
       matrix:
+        os: [windows-2025-vs2026, windows-2025, windows-2022]
         build_type: [Release]
         generator: ["MSYS Makefiles"]
         platform: ["win32"]
-        # TODO: c_compiler: [pocc]
-        os: [windows-2025-vs2026, windows-2025, windows-2022]
         include:
+          - os: windows-2022
+            c_compiler: pocc
+            version: 13.01-git-lfs
           - os: windows-2025
-            c_compiler: ''
-            version:
-          - os:
-
+            version: 12.0.2
+          - os: windows-2025-vs2026
+            c_compiler: cc
+            version: 11.0.2
 
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.13'
 
       - name: Install python module
         run: |
@@ -85,8 +84,9 @@ jobs:
       - name: Test action (Setup PellesC with pre-installed MSYS2 for CMake)
         uses: ./
         with:
-          cmake-update: ${{ 'cc' == matrix.c_compiler }}
-          # version: 12.0.2
+          cmake-update: ${{ 'cc' == matrix.c_compiler ||
+                            '' == matrix.c_compiler }}
+          version: ${{ matrix.version }}
           verbose: true
 
       - name: Check workaround Pelles C long name bug in `cc`
