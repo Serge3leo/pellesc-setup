@@ -42,19 +42,19 @@ jobs:
       # customize the build_type list.
 
       matrix:
-        os: [windows-2025-vs2026, windows-2025, windows-2022]
+        version: [13.01-git-lfs, 12.0.2, 11.0.2]
         build_type: [Release]
         generator: ["MSYS Makefiles"]
         platform: ["win32"]
         include:
-          - os: windows-2022
-            c_compiler: pocc
-            version: 13.01-git-lfs
-          - os: windows-2025
-            version: 12.0.2
-          - os: windows-2025-vs2026
+          - version: 13.01-git-lfs
             c_compiler: cc
-            version: 11.0.2
+            os: windows-2022
+          - version: 12.0.2
+            os: windows-2025
+          - version: 11.0.2
+            c_compiler: pocc
+            os: windows-2025-vs2026
 
     steps:
       - uses: actions/checkout@v6
