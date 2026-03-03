@@ -52,6 +52,7 @@ runs:
     - name: Setup MSYS2
       if: ${{ 'skip' != inputs.msystem }}
       id: msys2
+      uses: msys2/setup-msys2@v2
       with:
         msystem: ${{ inputs.msystem }}
         cache: ${{ inputs.cache }}
@@ -138,7 +139,7 @@ runs:
         path: ${{ steps.pd.outputs.pd }}
 
     - name: Install Pelles C
-      if: ${{ !fromJSON(steps.cache-pd.outputs.cache-hit }}
+      if: ${{ !fromJSON(steps.cache-pd.outputs.cache-hit) }}
       shell: pwsh
       run: |
         $setup = "dist\${{ inputs.version }}\setup.exe"
@@ -161,7 +162,7 @@ runs:
         }
 
     - name: Save cached Pelles C directory
-      if: ${{ !fromJSON(steps.cache-pd.outputs.cache-hit }}
+      if: ${{ !fromJSON(steps.cache-pd.outputs.cache-hit) }}
       uses: action/cache/save@v5
       with:
         key: ${{ steps.pd.outputs.key }}
