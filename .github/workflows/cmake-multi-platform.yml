@@ -59,14 +59,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-
-      - name: Install python module
-        run: |
-          python -c "import sys; print(sys.version); print(sys.executable)"
-          python -m pip install yamllint
-
       - name: Lint
         run: |
+          python -m pip install yamllint
           python -m yamllint --list-file .
           python -m yamllint .
 
@@ -89,44 +84,20 @@ jobs:
           version: ${{ matrix.version }}
           verbose: true
 
-      - name: Check workaround Pelles C long name bug in `cc`
-        shell: pwsh -File {0}
-        run: |
-          $exitcode = 0
-          cc hello.c
-          if ($LASTEXITCODE) {
-            $exitcode = $LASTEXITCODE
-            "`"cc hello.c`": FAIL $LASTEXITCODE"
-          }
-          &"$env:PellesCDir\Bin\cc.exe" hello.c
-          if ($LASTEXITCODE) {
-            "`"$env:PellesCDir\Bin\cc.exe hello.c`": Expected $LASTEXITCODE"
-          } else {
-            $exitcode = 1
-          }
-          &"$env:PellesCDirSFN\Bin\cc.exe" hello.c
-          if ($LASTEXITCODE) {
-            $exitcode = $LASTEXITCODE
-            "`"$env:PellesCDirSFN\Bin\cc.exe hello.c`": FAIL $LASTEXITCODE"
-          }
-          del hello.obj
-          $LASTEXITCODE = $exitcode
-          $LASTEXITCODE = 0
-
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only
         # required if you are using a single-configuration generator such as
         # make.  See
         # https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
 
-        run: >
-          cmake -B ${{ steps.strings.outputs.build-output-dir }}
-          ${{ (matrix.c_compiler &&
-               format('-DCMAKE_C_COMPILER={0}', matrix.c_compiler)) || '' }}
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          -G "${{ matrix.generator }}"
-          -S "${{ github.workspace }}"
-          ${{ matrix.cmake_add }}
+        run: |
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} `
+            ${{ (matrix.c_compiler &&
+                 format('-DCMAKE_C_COMPILER={0}', matrix.c_compiler)) || '' }} `
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} `
+            -G "${{ matrix.generator }}" `
+            -S "${{ github.workspace }}" `
+            ${{ matrix.cmake_add }}
 
       - name: Build
         # Build your program with the given configuration. Note that --config
