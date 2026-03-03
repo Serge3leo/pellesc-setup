@@ -179,7 +179,7 @@ runs:
           }}
         $pd_path = $pd_path.Substring(0, $pd_path.IndexOf(';'))
         if ($${{ fromJSON(inputs.env-workaround) }}) {
-          $pd_pellescdir_sfn = (cmdi.exe /c `
+          $pd_pellescdir_sfn = (cmd.exe /c `
                                 "@for %I in (`"$pd_pellescdir`") do @echo %~sI")
           $pd_path = $pd_path.Replace($pd_pellescdir, $pd_pellescdir_sfn, `
                                       'OrdinalIgnoreCase')
