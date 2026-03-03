@@ -46,6 +46,7 @@ jobs:
         build_type: [Release]
         generator: ["MSYS Makefiles"]
         platform: ["win32"]
+        cmake_add: ["--debug-trycompile"]
         include:
           - version: 13.01-git-lfs
             c_compiler: cc
