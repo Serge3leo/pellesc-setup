@@ -172,6 +172,9 @@ runs:
       shell: pwsh
       run: |
         $pd = "${{ steps.pd.outputs.pd }}"
+        dir "$pd"
+        dir "$pd\Bin\povars64.bat"
+        type "$pd\Bin\povars64.bat"
         cmd /c "`"$pd\Bin\povars64.bat`" && set" | .{process{
             if ($_ -match '^((pellescdir|include|lib|path)[^=]*)=(.*)') {
               Set-Variable ("pd_" + $matches[1]) $matches[3]
