@@ -1,4 +1,4 @@
-[![CMake on multiple platforms](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml)
+[![CMake on multiple platforms](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml)
 
 # pellesc-msys2
 Устанавливает компилятор Pelles C и настраивает пути и переменные для
@@ -14,7 +14,7 @@
 ## ПРЕДУПРЕЖДЕНИЕ
 Команда `cc` имеет ограничения:
 - Ошибки, в случае если `cc` вызывается по пути, который имеет пробелы;
-- В версии `11.0.2`, не совместима с Windows 2022/2025;
+- Версия `11.0.2`, не совместима с Windows 2022/2025;
 
 Подробности смотрите [Test Pelles C](
 https://github.com/Serge3leo/test-pellesc/blob/main/.github/workflows/test-pellesc.yml).

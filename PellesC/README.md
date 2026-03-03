@@ -3,7 +3,7 @@
  SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
  -->
 
-# CMake compiler and detections modules for  Pells C
+# CMake compiler and detections modules for Pells C
 The installation requires permissions to create and modify files in the
 subdirectories `CMAKE_ROOT` of the current CMake.
 

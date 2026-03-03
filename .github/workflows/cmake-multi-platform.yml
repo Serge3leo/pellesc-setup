@@ -81,6 +81,8 @@ jobs:
       - name: Test action (Setup PellesC with pre-installed MSYS2 for CMake)
         uses: ./
         with:
+          location:  # Default of installer: `C:\Program Files\PellesC`
+          env-workaround: true  # Needed workaround
           version: ${{ matrix.version }}
           verbose: true
 
