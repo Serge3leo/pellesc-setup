@@ -177,7 +177,7 @@ runs:
       uses: actions/cache/save@v5
       with:
         key: ${{ steps.pd.outputs.key }}
-        path: ${{ steps.pd.outputs.path}
+        path: ${{ steps.pd.outputs.path }}
 
     - name: Pelles C environments variables
       shell: pwsh
