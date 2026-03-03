@@ -171,18 +171,15 @@ runs:
     - name: Pelles C environments variables
       shell: pwsh
       run: |
-        $pd = "${{ steps.pd.outputs.pd }}"
-        dir "$pd"
-        dir "$pd\Bin\povars64.bat"
-        type "$pd\Bin\povars64.bat"
-        cmd.exe /c "`"$pd\Bin\povars64.bat`" && set" | .{process{
+        cmd.exe /c "`"${{ steps.pd.outputs.pd }}\Bin\povars64.bat`" && set" | `
+          .{process{
             if ($_ -match '^((pellescdir|include|lib|path)[^=]*)=(.*)') {
               Set-Variable ("pd_" + $matches[1]) $matches[3]
             }
           }}
         $pd_path = $pd_path.Substring(0, $pd_path.IndexOf(';'))
         if ($${{ fromJSON(inputs.env-workaround) }}) {
-          $pd_pellescdir_sfn = (cmd.exe /c `
+          $pd_pellescdir_sfn = (cmdi.exe /c `
                                 "@for %I in (`"$pd_pellescdir`") do @echo %~sI")
           $pd_path = $pd_path.Replace($pd_pellescdir, $pd_pellescdir_sfn, `
                                       'OrdinalIgnoreCase')
@@ -222,5 +219,5 @@ runs:
             &$prg --version | Select-Object -First 1
           } catch {}
         }
-        dir $env:PellesCDir
+        dir "$env:PellesCDir"
         type "$env:PellesCDir/Bin/povars64.bat"
