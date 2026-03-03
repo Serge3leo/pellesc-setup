@@ -42,7 +42,7 @@ jobs:
       # customize the build_type list.
 
       matrix:
-        version: [13.01-git-lfs, 12.0.2, 11.0.2]
+        version: [13.01-git-lfs, 12.0.2]  # , 11.0.2]
         build_type: [Release]
         generator: ["MSYS Makefiles"]
         platform: ["win32"]
@@ -52,6 +52,7 @@ jobs:
             c_compiler: cc
             os: windows-2022
           - version: 12.0.2
+            c_compiler: pocc
             os: windows-2025
           - version: 11.0.2
             c_compiler: pocc
@@ -80,8 +81,8 @@ jobs:
       - name: Test action (Setup PellesC with pre-installed MSYS2 for CMake)
         uses: ./
         with:
-          cmake-update: ${{ 'cc' == matrix.c_compiler ||
-                            '' == matrix.c_compiler }}
+          # cmake-update: ${{ 'cc' == matrix.c_compiler ||
+          #                   '' == matrix.c_compiler }}
           version: ${{ matrix.version }}
           verbose: true
 
