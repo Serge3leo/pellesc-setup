@@ -49,10 +49,10 @@ jobs:
         cmake_add: ["--debug-trycompile"]
         include:
           - version: 13.01-git-lfs
-            c_compiler: cc
+            c_compiler: pocc
             os: windows-2022
           - version: 12.0.2
-            c_compiler: pocc
+            c_compiler: cc
             os: windows-2025
           # - version: 11.0.2
           #   c_compiler: pocc
