@@ -82,7 +82,7 @@ runs:
         "INCLUDE=$PellesCDir\Include;$PellesCDir\Include\Win;$env:INCLUDE`n" + `
         "LIB=$PellesCDir\Lib;$PellesCDir\Lib\Win64;$env:LIB`n"
           | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        "$PellesCDir\Bin`n" + `
+        "$PellesCDir\Bin`n" `
           | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         if ("skip" -ne "${{ inputs.msystem }}") {
           pacman -S --noconfirm "$env:MINGW_PACKAGE_PREFIX-binutils" `
