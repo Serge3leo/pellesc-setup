@@ -42,21 +42,20 @@ jobs:
       # customize the build_type list.
 
       matrix:
-        version: [13.01-git-lfs, 12.0.2]  # , 11.0.2]
+        version: [13.01-git-lfs, 12.0.2, 11.0.2]
         build_type: [Release]
         generator: ["MSYS Makefiles"]
-        platform: ["win32"]
-        cmake_add: ["--debug-trycompile"]
+        platform: [win32]
+        cmake_add: [--debug-trycompile]
         include:
           - version: 13.01-git-lfs
-            c_compiler: cc
             os: windows-2025
           - version: 12.0.2
+            c_compiler: cc
+            os: windows-2022
+          - version: 11.0.2
             c_compiler: pocc
             os: windows-2022
-            # - version: 11.0.2
-            #   c_compiler: pocc
-            #   os: windows-2025-vs2026
 
     steps:
       - uses: actions/checkout@v6
@@ -81,10 +80,28 @@ jobs:
       - name: Test action (Setup PellesC with pre-installed MSYS2 for CMake)
         uses: ./
         with:
-          location:  # Default of installer: `C:\Program Files\PellesC`
-          env-workaround: true  # Needed workaround
           version: ${{ matrix.version }}
           verbose: true
+          # location:  # Default of installer: `C:\Program Files\PellesC`
+          # env-workaround: true  # Needed workaround
+          # cmake-update: true
+          # install: patch
+          # pacboy: clang:p
+
+      - name: Check compiler
+        shell: pwsh -File {0}
+        run: |
+          if ("" -eq "${{ matrix.c_compiler }}") {
+            $cc = "cc"
+          } else {
+            $cc = "${{ matrix.c_compiler }}"
+          }
+          &$cc hello.c
+          if ("cc" -ne $cc) {
+            polink hello.obj
+          }
+          .\hello.exe
+          del hello.obj,hello.exe
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only

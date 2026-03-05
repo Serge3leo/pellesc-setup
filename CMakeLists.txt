@@ -4,13 +4,15 @@
 
 cmake_minimum_required (VERSION 3.25)
 project(pellesc_msys2
-        VERSION 0.2.0
+        VERSION 0.3.0
         DESCRIPTION
         "Use PellesC in CMake project"
         HOMEPAGE_URL https://github.com/Serge3leo/pellesc-msys2.git
         LANGUAGES C)
 
 add_executable(hello hello.c)
+target_compile_definitions(hello PRIVATE TEST_DEFINITIONS)
+target_compile_definitions(hello PRIVATE TEST_DEFINITIONS_VAL=1917)
 add_test(NAME hello COMMAND hello)
 set_tests_properties(hello PROPERTIES PASS_REGULAR_EXPRESSION "Привет мир")
 

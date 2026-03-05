@@ -1,6 +1,9 @@
 ---
 name: PellesC MSYS2
 description: Setup Pelles C with MSYS2 for CMake
+branding:
+  color: blue
+  icon: terminal
 inputs:
   cache:
     required: false
@@ -10,10 +13,24 @@ inputs:
     required: false
     description: Check PellesC modules, install, if not
     default: check
+  cmake-update:
+    required: false
+    description: >-
+      Instal last CMake version from MSYS2 (probably needed for
+      `env-workaround`)
+    default: false
   env-workaround:
     required: false
     description: Short File Name (SFN) in PATH and environments variables
     default: false
+  install:
+    required: false
+    description: >-
+      After installation and/or update, install additional packages through
+      pacman
+  key-prefix:
+    required: false
+    description: Add prefix to cache key (for refresh or identification)
   location:
     required: false
     description: Where to install Pelles C
@@ -24,18 +41,22 @@ inputs:
       Variant of the environment to set by default: msys, mingw32, mingw64,
       ucrt64, clang64, clangarm64 or skip
     default: mingw64
+  pacboy:
+    required: false
+    description: >-
+      After installation and/or update, install additional packages through
+      pacboy
   verbose:
     required: false
     description: >-
       Show version and location `pocc`, `make`,
-      `cmake` ... form PATH. ['off', 'on']
+      `cmake` ... form PATH.
     default: false
   version:
     required: false
     description: >-
       A specific version to install. Defaults to GitHub mirrored.
     default: '13.01-git-lfs'
-
 runs:
   using: composite
   steps:
@@ -56,10 +77,13 @@ runs:
       with:
         msystem: ${{ inputs.msystem }}
         cache: ${{ inputs.cache }}
+        # Workaround, `setup-msys2` don't accepted empty string
+        install: ${{ case('' == inputs.install, 'pactoys', inputs.install) }}
         pacboy: >-
           binutils:p
-          cmake:p
           make:p
+          ${{ case(fromJSON(inputs.cmake-update), 'cmake:p', '') }}
+          ${{ inputs.pacboy }}
 
     - name: MSYS2 PATH
       if: ${{ 'skip' != inputs.msystem }}
@@ -106,7 +130,7 @@ runs:
       id: pd
       shell: pwsh
       run: |
-        $key = "PellesC_${{ inputs.version }}_"
+        $key = "${{ inputs.key-prefix }}_PellesC_${{ inputs.version }}_0.3_"
         if ("" -eq "${{ inputs.location }}") {
           $pd = "C:\Program Files\PellesC"
           $sa = ""
@@ -156,9 +180,11 @@ runs:
           }
           Start-Process "$setup" "/S ${{ steps.pd.outputs.sa }}" `
                         -Wait -Verb runas
+          # setup.exe /S /D=c:\pellesc
         } else {
           choco install --yes --no-progress pelles-c `
                 --version=${{ inputs.version }} ${{ steps.pd.outputs.ia }}
+          # install pelles-c --version=11.0.2 --install-arguments=/D=c:\pellesc
         }
 
     - name: Save cached Pelles C directory
@@ -219,5 +245,3 @@ runs:
             &$prg --version | Select-Object -First 1
           } catch {}
         }
-        dir "$env:PellesCDir"
-        type "$env:PellesCDir/Bin/povars64.bat"

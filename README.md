@@ -1,4 +1,4 @@
-[![CMake on multiple platforms](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml)
+[![CMake on multiple platforms](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml)
 
 # pellesc-msys2
 Installs the Pelles C compiler and configures paths and environment variables
@@ -12,6 +12,9 @@ See also [CMake compiler and detections modules for Pells C](
 PellesC/README.md).
 
 ## WARNING
+Chocolatey packages `12.0.2` (pocc 12.00.1) and `11.0.2` (pocc 11.00.3) work
+with CMake seems to be working only under Windows 2022.
+
 The `cc` command has limitations:
 - Bugs if `cc` is called on a path that has spaces;
 - Version `11.0.2', not compatible with Windows 2022/2025;
@@ -22,9 +25,9 @@ https://github.com/Serge3leo/test-pellesc/blob/main/.github/workflows/test-pelle
 If you need CMake to autodetect the `cc` compiler, you can use two options to
 workaround it:
 1. Install Pelles C in a directory without spaces in the path (parameter
-   [location](#location)). This is the default option.
+   [location](#location)).  This is the default option.
 2. Set environment variables in SFN (Short File Names) format (parameter
-   [env-workaround](#env-workaround)). This option depends on the CMake
+   [env-workaround](#env-workaround)).  This option depends on the CMake
    version.
 
 # Usage
@@ -49,7 +52,7 @@ An example with a CMake project can be see:
 # Options
 ## cache
   - Type: `boolean`
-  - Default: `false`
+  - Default: `true`
 
 To speed up re-use, cache `MSYS2` and the installation directory Pelles C.
 
@@ -62,11 +65,17 @@ To speed up re-use, cache `MSYS2` and the installation directory Pelles C.
 Always install the Pelles C support modules.
 
 ### check
-Check the variable `CMAKE_C_COMPILER_LIST`.  Install Pelles C support modules
-if this variable do not contain `PellesC`.
+Check the Pelles C support modules.  Install the Pelles C support modules if
+they are not present in `PellesC`.
 
 ### no
 Do not install Pelles C support modules.
+
+## cmake-update
+  - Type: `boolean`
+  - Default: `false`
+
+Instal last CMake version from MSYS2.
 
 ## env-workaround
   - Type: `boolean`
@@ -77,6 +86,19 @@ Convert the environment variables to SFN form, i.e. if the value is
 value is `location` `C:\Program Files\PellesC`, all occurrences will be
 replaced with `C:\PROGRA~1\PellesC` (the number may vary depending on the
 specific installation).
+
+## install
+  - Type: `string`
+  - Allowed values: a whitespace separated list of packages
+
+Installing additional packages after updating the system is supported through
+option install.  See [Setup MSYS2, install](
+https://github.com/msys2/setup-msys2?tab=readme-ov-file#install).
+
+## key-prefix
+  - Type: `string`
+
+Add prefix to cache key (for refresh version, identification etc).
 
 ## location
   - Type: `string`
@@ -96,6 +118,14 @@ Files\PellesC`.
 Sets the value of the environment variable [`MSYSTEM`](
 https://www.msys2.org/docs/environments) and `PATH`.  Case is ignored.  If
 equal to `skip`, then the MSYS2 configuration is skipped.
+
+## pacboy
+  - Type: `string`
+  - Allowed values: a whitespace separated list of packages
+
+Installing additional packages with pacboy after updating the system is
+supported through option pacboy.  See [Setup MSYS2, pacboy](
+https://github.com/msys2/setup-msys2?tab=readme-ov-file#pacboy).
 
 ## verbose
   - Type: `boolean`
@@ -121,4 +151,4 @@ Sorry for my best English.  Alas, this file is actually a yandex translation of
 [README.ru.md](README.ru.md) with minimal editorial changes.
 
 # License
-[BSD-2-Clause © 2025 Сергей Леонтьев (leo@sai.msu.ru).](LICENSE)
+[BSD-2-Clause © 2026 Сергей Леонтьев (leo@sai.msu.ru).](LICENSE)

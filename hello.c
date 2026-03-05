@@ -38,4 +38,8 @@ int main(void) {
     #else
         printf("Don't defined __STDC__ and __STDC_VERSION__\n");
     #endif
+    #define STR(S)  #S
+    #define DUMP(X) printf(#X "=%s\n", STR(X))
+    DUMP(TEST_DEFINITIONS);
+    DUMP(TEST_DEFINITIONS_VAL);
 }
