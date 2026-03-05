@@ -89,6 +89,21 @@ jobs:
           # install: patch
           # pacboy: clang:p
 
+      - name: Check compiler
+        shell: pwsh -File {0}
+        run: |
+          if ("" -eq "${{ matrix.c_compiler }}") {
+            $cc = "cc"
+          } else {
+            $cc = "${{ matrix.c_compiler }}"
+          }
+          &$cc hello.c
+          if ("cc" -ne $cc) {
+            polink hello.obj
+          }
+          .\hello.exe
+          del hello.obj,hello.exe
+
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only
         # required if you are using a single-configuration generator such as
