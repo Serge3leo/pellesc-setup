@@ -27,16 +27,14 @@ jobs:
 
       fail-fast: false
 
-      # Set up a matrix to run the following 3 configurations:
+      # Set up a matrix to run the following configurations:
       #
-      # 1. <Latest PellesC compiler toolchain on the default runner image,
-      # windows-2025-vs2026, "MSYS Makefiles">
+      # 1. <Pelles C 13.01-git-lfs, windows-2025-vs2026, "MSYS Makefiles">
+      #    Latest at at Mar 5, 2026
       #
-      # 2. <Latest PellesC compiler toolchain on the default runner image,
-      # windows-2025, "MSYS Makefiles"> (windows-latest at 26.02.2026)
+      # 2. <Pelles C 12.0.2, windows-2022, "MSYS Makefiles">
       #
-      # 3. <Latest PellesC compiler toolchain on the default runner image,
-      # windows-2022, "MSYS Makefiles">
+      # 3. <Pelles C 11.0.2, windows-2022, "MSYS Makefiles">
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.)
       # customize the build_type list.
@@ -46,10 +44,10 @@ jobs:
         build_type: [Release]
         generator: ["MSYS Makefiles"]
         platform: [win32]
-        cmake_add: [--debug-trycompile]
+        # cmake_add: [--debug-trycompile]
         include:
           - version: 13.01-git-lfs
-            os: windows-2025
+            os: windows-2025-vs2026
           - version: 12.0.2
             c_compiler: cc
             os: windows-2022
@@ -89,7 +87,6 @@ jobs:
           # pacboy: clang:p
 
       - name: Check compiler
-        shell: pwsh -File {0}
         run: |
           if ("" -eq "${{ matrix.c_compiler }}") {
             $cc = "cc"
