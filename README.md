@@ -12,6 +12,9 @@ See also [CMake compiler and detections modules for Pells C](
 PellesC/README.md).
 
 ## WARNING
+Chocolatey packages `12.0.2` (pocc 12.00.1) and `11.0.2` (pocc 11.00.3) work
+with CMake seems to be working only under Windows 2022.
+
 The `cc` command has limitations:
 - Bugs if `cc` is called on a path that has spaces;
 - Version `11.0.2', not compatible with Windows 2022/2025;
