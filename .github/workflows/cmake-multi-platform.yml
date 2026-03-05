@@ -49,11 +49,10 @@ jobs:
         cmake_add: [--debug-trycompile]
         include:
           - version: 13.01-git-lfs
-            c_compiler: cc
             os: windows-2025
           - version: 12.0.2
-            c_compiler: pocc
-            os: windows-2025-vs2026
+            c_compiler: cc
+            os: windows-2022
           - version: 11.0.2
             c_compiler: pocc
             os: windows-2022
@@ -85,7 +84,7 @@ jobs:
           verbose: true
           # location:  # Default of installer: `C:\Program Files\PellesC`
           # env-workaround: true  # Needed workaround
-          cmake-update: true
+          # cmake-update: true
           # install: patch
           # pacboy: clang:p
 
