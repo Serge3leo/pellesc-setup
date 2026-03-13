@@ -183,8 +183,13 @@ runs:
           $ptrn = '^.*[/\\]_actions[/\\]'
           if ($env:GITHUB_ACTION_PATH -match $ptrn) {
             $restapi = 'https://media.githubusercontent.com/media/' + `
-                       ($action_path -replace $ptrn) + '/' + `
+                       ($env:GITHUB_ACTION_PATH -replace $ptrn) + '/' + `
                        $base
+            "GITHUB_ACTION_PATH='$env:GITHUB_ACTION_PATH'"
+            "base='$base'"
+            "setup='$setup'"
+            "ptrn='$ptrn'"
+            "restapi='$restapi'"
             Invoke-WebRequest $restapi -OutFile $setup
             dir $setup
           }
