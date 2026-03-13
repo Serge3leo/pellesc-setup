@@ -185,23 +185,24 @@ runs:
             $restapi = 'https://media.githubusercontent.com/media/' + `
                        ($env:GITHUB_ACTION_PATH -replace $ptrn) + '/' + `
                        $base
-            "GITHUB_ACTION_PATH='$env:GITHUB_ACTION_PATH'"
-            "base='$base'"
-            "setup='$setup'"
-            "ptrn='$ptrn'"
-            "restapi='$restapi'"
+            if ($${{ fromJSON(inputs.verbose) }}) {
+              "Rest API URL: '$restapi'"
+            }
             Invoke-WebRequest $restapi -OutFile $setup
-            dir $setup
+            if ($${{ fromJSON(inputs.verbose) }}) {
+              dir $setup
+            }
           }
           $shasum = (Get-FileHash $setup)
           if ($${{ fromJSON(inputs.verbose) }}) {
             $shasum
           }
+          # TODO setup.exe.sha512, may be by next version?
           if ( `
           '84E586D1FCA7B9FEC55BD294A103AF16A045D1DF1BCB77A3F4FDF13D8F239141' `
               -ne $shasum.Hash) {
-            "`"$setup`": corrupted"
-            TODO-Fail
+            Write-Error "'$setup': misconfigured or corrupted"
+            Exit 2
           }
           Start-Process "$setup" "/S ${{ steps.pd.outputs.sa }}" `
                         -Wait -Verb runas
