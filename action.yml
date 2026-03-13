@@ -70,6 +70,14 @@ runs:
       shell: pwsh
       run: git lfs pull
 
+    - name: Debug checkout
+      shell: bash {0} || true
+      run: |
+        pwd
+        ls -l
+        ls -l PellesC
+        ls -l dist
+
     - name: Setup MSYS2
       if: ${{ 'skip' != inputs.msystem }}
       id: msys2
