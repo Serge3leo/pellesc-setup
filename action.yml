@@ -185,7 +185,9 @@ runs:
             $restapi = 'https://media.githubusercontent.com/media/' + `
                        ($action_path -replace $ptrn) + '/' + `
                        $base
+            $setup = "c:\tmp\setup.exe"
             Invoke-WebRequest $restapi -OutFile $setup
+            dir $setup
           }
           $shasum = (Get-FileHash $setup)
           if ($${{ fromJSON(inputs.verbose) }}) {
