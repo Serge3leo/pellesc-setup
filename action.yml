@@ -83,8 +83,14 @@ runs:
     - name: GitHub LFS pull
       if: ${{ endsWith(inputs.version, '-git-lfs') }}
       working-directory: ${{ github.action_path }}
-      shell: pwsh
-      run: git lfs pull
+      shell: bash {0}
+      run: |
+        set -x
+        pwd
+        ls -la
+        ls -laR dist
+        git lfs pull
+        ls -laR dist
 
     - name: Debug checkout
       shell: bash {0}
