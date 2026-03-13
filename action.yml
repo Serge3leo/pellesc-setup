@@ -72,7 +72,7 @@ runs:
         pwd
         echo "GITHUB_ACTION_PATH=$GITHUB_ACTION_PATH"
         ls -l "$GITHUB_ACTION_PATH"
-        ls -l "$GITHUB_ACTION_PATH"/dist
+        ls -lR "$GITHUB_ACTION_PATH"/dist
         exit 0
 
     - name: Setup MSYS2
@@ -116,17 +116,17 @@ runs:
       if: ${{ 'no' != inputs.cmake-module }}
       shell: pwsh -File {0}
       run: |
-        $pm = $env:GITHUB_ACTION_PATH\PellesC
+        $pm = "$env:GITHUB_ACTION_PATH\PellesC"
         if ("always" -eq "${{ inputs.cmake-module }}") {
-          cmake -P $pm\uninstall.cmake
-          cmake -P $pm\install.cmake
+          cmake -P "$pm\uninstall.cmake"
+          cmake -P "$pm\install.cmake"
         } else {
-          cmake -P $pm\detect.cmake
+          cmake -P "$pm\detect.cmake"
           if (0 -ne $LASTEXITCODE) {
-            cmake -P $pm\install.cmake
+            cmake -P "$pm\install.cmake"
           }
         }
-        cmake -P $pm\detect.cmake
+        cmake -P "$pm\detect.cmake"
         if ($${{ fromJSON(inputs.verbose) }}) {
           "inputs.cmake-module: ${{ inputs.cmake-module }}"
           "---"
