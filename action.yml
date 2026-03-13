@@ -75,7 +75,7 @@ runs:
           Write-Error ("PelleC ${{ inputs.version }} CMake modules" + `
                        " incompatible with Windows " + `
                        [System.Environment]::OSVersion.Version + "`n" + `
-                       "Use PelleC $pw11 or ``cmake-module: 'no'``" + `
+                       "Use PelleC >= $pw11 or ``cmake-module: 'no'``" + `
                        " or Windows 10/2022")
           Exit 1
         }
