@@ -67,7 +67,7 @@ runs:
         if ($${{ fromJSON(inputs.verbose) }}) {
           [System.Environment]::OSVersion
         }
-        $pv = "${{ inputs.version }}" -replace -replace "[^0-9.]*$"
+        $pv = "${{ inputs.version }}" -replace "[^0-9.]*$"
         $pw11 = "13.0"
         $w11bld = 22000
         if ([version]$pv -lt [version]$pv11 &&
