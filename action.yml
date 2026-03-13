@@ -70,8 +70,8 @@ runs:
         $pv = "${{ inputs.version }}" -replace "[^0-9.]*$"
         $pw11 = "13.0"
         $w11bld = 22000
-        if ([version]$pv -lt [version]$pv11 &&
-            [System.Environment]::OSVersion.Version.Build -lt $w11bld) {
+        if (([version]$pv -lt [version]$pw11) -and
+            ([System.Environment]::OSVersion.Version.Build -ge $w11bld)) {
           Write-Error ("PelleC ${{ inputs.version }} CMake modules" + `
                        " incompatible with Windows " + `
                        [System.Environment]::OSVersion.Version + "`n" + `
