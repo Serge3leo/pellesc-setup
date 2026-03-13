@@ -183,7 +183,7 @@ runs:
           $ptrn = '^.*[/\\]_actions[/\\]'
           if ($action_path -match $ptrn) {
             $restapi = 'https://media.githubusercontent.com/media/' + `
-                       ($action_path -replace $ptrn) + '/' `
+                       ($action_path -replace $ptrn) + '/' + `
                        $base
             Invoke-WebRequest $restapi -OutFile $setup
           }
