@@ -60,6 +60,11 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Check Windows version
+      shell: pwsh
+      run: |
+        [System.Environment]::OSVersion
+
     - name: GitHub LFS pull
       if: ${{ endsWith(inputs.version, '-git-lfs') }}
       working-directory: ${{ github.action_path }}
