@@ -60,13 +60,9 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Checkout
-      if: ${{ endsWith(inputs.version, '-git-lfs') ||
-              'no' != inputs.cmake-module }}
-      uses: actions/checkout@v6
-
     - name: GitHub LFS pull
       if: ${{ endsWith(inputs.version, '-git-lfs') }}
+      working-directory: ${{ github.action_path }}
       shell: pwsh
       run: git lfs pull
 
@@ -74,9 +70,9 @@ runs:
       shell: bash {0}
       run: |
         pwd
-        ls -l
         echo "GITHUB_ACTION_PATH=$GITHUB_ACTION_PATH"
         ls -l "$GITHUB_ACTION_PATH"
+        ls -l "$GITHUB_ACTION_PATH"/dist
         exit 0
 
     - name: Setup MSYS2
@@ -120,16 +116,17 @@ runs:
       if: ${{ 'no' != inputs.cmake-module }}
       shell: pwsh -File {0}
       run: |
+        $pm = $env:GITHUB_ACTION_PATH\PellesC
         if ("always" -eq "${{ inputs.cmake-module }}") {
-          cmake -P PellesC\uninstall.cmake
-          cmake -P PellesC\install.cmake
+          cmake -P $pm\uninstall.cmake
+          cmake -P $pm\install.cmake
         } else {
-          cmake -P PellesC\detect.cmake
+          cmake -P $pm\detect.cmake
           if (0 -ne $LASTEXITCODE) {
-            cmake -P PellesC\install.cmake
+            cmake -P $pm\install.cmake
           }
         }
-        cmake -P PellesC\detect.cmake
+        cmake -P $pm\detect.cmake
         if ($${{ fromJSON(inputs.verbose) }}) {
           "inputs.cmake-module: ${{ inputs.cmake-module }}"
           "---"
@@ -175,7 +172,7 @@ runs:
       if: steps.cache-pd.outputs.cache-hit != 'true'
       shell: pwsh
       run: |
-        $setup = "dist\${{ inputs.version }}\setup.exe"
+        $setup = "$env:GITHUB_ACTION_PATH\dist\${{ inputs.version }}\setup.exe"
         if (Test-Path -Path "$setup" -PathType Leaf) {
           $shasum = (Get-FileHash $setup)
           if ($${{ fromJSON(inputs.verbose) }}) {
