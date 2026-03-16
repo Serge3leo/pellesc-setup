@@ -2,9 +2,6 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
-# TODO set(_id_pellesc_ "PellesC")
-# TODO message("PellesC-C: CMAKE_ROOT=${CMAKE_ROOT}")
-
 include(Compiler/CMakeCommonCompilerMacros)
 include(Compiler/PellesC)
 __compiler_pellesc(C)

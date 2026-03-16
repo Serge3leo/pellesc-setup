@@ -2,9 +2,6 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
-# TODO set(_id_pellesc_ "PellesC")
-# TODO message("PellesC-DetermineCompiler: CMAKE_C_COMPILER=${CMAKE_C_COMPILER} CMAKE_ROOT=${CMAKE_ROOT}")
-
 # Pelles C bug (TODO: ID & versions)
 string(TOLOWER "${CMAKE_C_COMPILER}" _pellesc_lower_)
 if ("${_pellesc_lower_}" MATCHES " .*pelles *c.bin.cc")
