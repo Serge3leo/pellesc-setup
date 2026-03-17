@@ -2,13 +2,12 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
-# По мотивам Platform/Windows-MSVC.cmake
-# И шаблонов `.ppj` PellesC
+# Based on `Platform/Windows-MSVC.cmake` and Pelles C `.ppj` templates
 
 include_guard()
 
-set(CMAKE_LIBRARY_PATH_FLAG "-LIBPATH:")
-set(CMAKE_LINK_LIBRARY_FLAG "")
+set(CMAKE_LIBRARY_PATH_FLAG "-libpath:")
+set(CMAKE_LINK_LIBRARY_FLAG )
 
 # TODO: Нужен ли?
 if (FALSE)
@@ -32,7 +31,7 @@ set(CMAKE_CXX_STANDARD_LIBRARIES_INIT "${CMAKE_C_STANDARD_LIBRARIES_INIT}")
 # CMP0091 & "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
 # CMP0141 & $<$<CONFIG:Debug,RelWithDebInfo>:Embedded>
 
-set (CMAKE_LINK_DEF_FILE_FLAG "-DEF:")
+set (CMAKE_LINK_DEF_FILE_FLAG "-def:")
 
 foreach(t IN ITEMS EXE SHARED MODULE)
   string(APPEND CMAKE_${t}_LINKER_FLAGS_DEBUG_INIT
@@ -48,15 +47,20 @@ macro (__windows_compiler_pellesc lang)
     "<CMAKE_LINKER> <OBJECTS> ${CMAKE_START_TEMP_FILE} -out:<TARGET> -implib:<TARGET_IMPLIB> -dll -version:<TARGET_VERSION_MAJOR>.<TARGET_VERSION_MINOR> <LINK_FLAGS> <LINK_LIBRARIES> ${CMAKE_END_TEMP_FILE}")
   set(CMAKE_${lang}_CREATE_SHARED_MODULE ${CMAKE_${lang}_CREATE_SHARED_LIBRARY})
 
-  set(CMAKE_${lang}_COMPILE_OBJECT
-    "<CMAKE_${lang}_COMPILER> ${CMAKE_START_TEMP_FILE} <DEFINES> <INCLUDES> <FLAGS> -Fo<OBJECT> -c <SOURCE> ${CMAKE_END_TEMP_FILE}")
+  if ("${lang}" MATCHES "ASM")
+    set(CMAKE_${lang}_COMPILE_OBJECT
+      "<CMAKE_${lang}_COMPILER> ${CMAKE_START_TEMP_FILE} <DEFINES> <INCLUDES> <FLAGS> -Fo<OBJECT> <SOURCE> ${CMAKE_END_TEMP_FILE}")
+  else ()
+    set(CMAKE_${lang}_COMPILE_OBJECT
+      "<CMAKE_${lang}_COMPILER> ${CMAKE_START_TEMP_FILE} <DEFINES> <INCLUDES> <FLAGS> -Fo<OBJECT> -c <SOURCE> ${CMAKE_END_TEMP_FILE}")
+  endif ()
 
   set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE
     "<CMAKE_${lang}_COMPILER> > <PREPROCESSED_SOURCE> ${CMAKE_START_TEMP_FILE} <DEFINES> <INCLUDES> <FLAGS> -E <SOURCE> ${CMAKE_END_TEMP_FILE}")
 
   # CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE не поддерживается
 
-  set(CMAKE_${lang}_LINK_DEF_FILE_FLAG "-DEF:")
+  set(CMAKE_${lang}_LINK_DEF_FILE_FLAG "${CMAKE_LINK_DEF_FILE_FLAG}")
   set(CMAKE_${lang}_USE_RESPONSE_FILE_FOR_OBJECTS 1)
   set(CMAKE_${lang}_LINK_EXECUTABLE
     "<CMAKE_LINKER> <OBJECTS> ${CMAKE_START_TEMP_FILE} -out:<TARGET> -implib:<TARGET_IMPLIB> -version:<TARGET_VERSION_MAJOR>.<TARGET_VERSION_MINOR> <LINK_FLAGS> <LINK_LIBRARIES> ${CMAKE_END_TEMP_FILE}")
@@ -64,22 +68,45 @@ macro (__windows_compiler_pellesc lang)
   set(CMAKE_${lang}_CREATE_WIN32_EXE "-subsystem:windows")
   set(CMAKE_${lang}_CREATE_CONSOLE_EXE "-subsystem:console")
 
-  string(APPEND CMAKE_${lang}_FLAGS_DEBUG_INIT "-Zi -Ob0")
-  string(APPEND CMAKE_${lang}_FLAGS_RELEASE_INIT "-Ot -Ob2 -DNDEBUG=1")
-  string(APPEND CMAKE_${lang}_FLAGS_RELWITHDEBINFO_INIT "-Zi -Ot -Ob1 -DNDEBUG=1")
-  string(APPEND CMAKE_${lang}_FLAGS_MINSIZEREL_INIT "-Os -Ob1 -DNDEBUG=1")
+  if ("${lang}" MATCHES "ASM")
+    string(APPEND CMAKE_${lang}_FLAGS_DEBUG_INIT "-Zi")
+    string(APPEND CMAKE_${lang}_FLAGS_RELEASE_INIT )
+    string(APPEND CMAKE_${lang}_FLAGS_RELWITHDEBINFO_INIT "-Zi")
+    string(APPEND CMAKE_${lang}_FLAGS_MINSIZEREL_INIT )
+  else ()
+    string(APPEND CMAKE_${lang}_FLAGS_DEBUG_INIT "-Zi -Ob0")
+    string(APPEND CMAKE_${lang}_FLAGS_RELEASE_INIT "-Ot -Ob2 -DNDEBUG=1")
+    string(APPEND CMAKE_${lang}_FLAGS_RELWITHDEBINFO_INIT "-Zi -Ot -Ob1 -DNDEBUG=1")
+    string(APPEND CMAKE_${lang}_FLAGS_MINSIZEREL_INIT "-Os -Ob1 -DNDEBUG=1")
 
-  # TODO define generic information about compiler dependencies
-  # set(CMAKE_DEPFILE_FLAGS_${lang} "-M -Fo<DEP_TARGET> > <DEP_FILE>")
-  # set(CMAKE_${lang}_DEPFILE_FORMAT gcc)
+    # TODO define generic information about compiler dependencies
+    # set(CMAKE_DEPFILE_FLAGS_${lang} "-M -Fo<DEP_TARGET> > <DEP_FILE>")
+    # set(CMAKE_${lang}_DEPFILE_FORMAT gcc)
+  endif ()
 
   # linker selection
   message("input CMAKE_LINKER=${CMAKE_LINKER}")
-  # TODO: resolve user set if ("x${CMAKE_LINKER}" STREQUAL "x")
-    cmake_path(GET CMAKE_${lang}_COMPILER PARENT_PATH CMAKE_LINKER)
-    string(APPEND CMAKE_LINKER "/polink")
+  cmake_path(GET CMAKE_${lang}_COMPILER PARENT_PATH __PellesC_Path)
+  # TODO: resolve user set if ("${CMAKE_LINKER}" STREQUAL "")
+    set(CMAKE_LINKER "${__PellesC_Path}/polink")
     message("resolved CMAKE_LINKER=${CMAKE_LINKER}")
   #endif ()
   set(CMAKE_${lang}_USING_LINKER_SYSTEM "${CMAKE_LINKER}")
   set(CMAKE_${lang}_USING_LINKER_MSVC "${CMAKE_LINKER}")
+
+  # TODO: Right, CMake way? Or set $ENV{ASM} ?
+  # Move to CMakeDetermineASMCompiler.cmake ?
+  if (TRUE)
+    message("input CMAKE_ASM_COMPILER=${CMAKE_ASM_COMPILER}")
+    if ("${CMAKE_ASM_COMPILER}" STREQUAL "")
+      set(CMAKE_ASM_COMPILER "${__PellesC_Path}/poasm.exe")
+      message("resolved CMAKE_ASM_COMPILER=${CMAKE_ASM_COMPILER}")
+    endif ()
+  else ()
+    message("input ENV{ASM}=$ENV{ASM}")
+    if ("${ENV{ASM}}" STREQUAL "")
+      set(ENV{ASM} "${__PellesC_Path}/poasm")
+      message("resolved ENV{ASM}=$ENV{ASM}")
+    endif ()
+  endif ()
 endmacro ()
