@@ -44,6 +44,8 @@ https://github.com/Serge3leo/test-pellesc/blob/main/.github/workflows/test-pelle
 ```
 
 Пример совместного использование в проекте CMake можно увидеть:
+  - [Learn CMake on GitHub multiple platforms](
+    https://github.com/Serge3leo/learn-cmake/blob/main/.github/workflows/learn_cmake.yml);
   - [cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml);
   - [C23/C++14 platform independent implementation of C2y countof()](
     https://github.com/Serge3leo/countof_ns/blob/main/.github/workflows/cmake-multi-platform.yml).
@@ -55,6 +57,12 @@ https://github.com/Serge3leo/test-pellesc/blob/main/.github/workflows/test-pelle
 
 Для ускорения повторного использования, кэшировать `MSYS2` и каталог установки
 Pelles C.
+
+Возможно будет полезно использовать дополнительные рабочие процессы для
+удаления тех кэшей, использование которых становится маловероятным (после
+закрытия PR и т.п.). Шаблоны таких процессов: [Clean Cache Action](
+https://github.com/marketplace/actions/clean-cache) или
+https://github.com/marketplace/actions/clean-cache-action .
 
 ## cmake-module
   - Тип: `string`

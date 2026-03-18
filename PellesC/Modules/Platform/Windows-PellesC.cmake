@@ -9,17 +9,6 @@ include_guard()
 set(CMAKE_LIBRARY_PATH_FLAG "-libpath:")
 set(CMAKE_LINK_LIBRARY_FLAG )
 
-# TODO: Нужен ли?
-if (FALSE)
-  # hack: if a new cmake (which uses CMAKE_LINKER) runs on an old build tree
-  # (where link was hardcoded) and where CMAKE_LINKER isn't in the cache
-  # and still cmake didn't fail in CMakeFindBinUtils.cmake (because it isn't rerun)
-  # hardcode CMAKE_LINKER here to link, so it behaves as it did before, Alex
-  if (NOT DEFINED CMAKE_LINKER)
-    set(CMAKE_LINKER "polink")
-  endif ()
-endif ()
-
 set(CMAKE_C_STANDARD_LIBRARIES_INIT "kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib comctl32.lib delayimp64.lib")
   # PellesC IDE: kernel32.lib user32.lib gdi32.lib comctl32.lib comdlg32.lib
   # advapi32.lib delayimp64.lib (или  delayimp.lib)
