@@ -109,4 +109,14 @@ macro (__windows_compiler_pellesc lang)
       message("resolved ENV{ASM}=$ENV{ASM}")
     endif ()
   endif ()
+
+  # RC
+  if(NOT CMAKE_RC_COMPILER_INIT)
+    set(CMAKE_RC_COMPILER_INIT porc)
+  endif()
+  if(NOT CMAKE_RC_COMPILE_OBJECT)
+    set(CMAKE_RC_COMPILE_OBJECT
+      "<CMAKE_RC_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -Fo<OBJECT> <SOURCE>")
+  endif()
+  enable_language(RC)
 endmacro ()
