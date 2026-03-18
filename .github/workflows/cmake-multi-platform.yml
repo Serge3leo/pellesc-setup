@@ -82,7 +82,7 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -B build
+          cmake -B build `
             ${{ (matrix.c_compiler &&
                  format('-DCMAKE_C_COMPILER={0}', matrix.c_compiler)) || '' }} `
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} `
