@@ -1,45 +1,38 @@
-// vim:set sw=4 ts=8 et fileencoding=utf8:
+// vim:set sw=4 ts=8 et fileencoding=utf8::Кодировка:UTF-8[АБЁЪЯабёъя]
 // SPDX-License-Identifier: BSD-2-Clause
 // SPDX-FileCopyrightText: 2025 Сергей Леонтьев (leo@sai.msu.ru)
 
 #include <stdio.h>
+#include <string.h>
+
+#define STR(A)  #A
+#define DUMP(X) printf(#X "=%s\n", STR(X))
+#define P(N)  ((void)(!strcmp(#N, STR(N)) ? 0 : printf("%s=%s ", #N, STR(N))))
+#define P2(N1, N2)  ((void)(!strcmp(#N1, STR(N1)) ? 0 : printf( \
+                                "%s.%s=%s.%s ", #N1, #N1, STR(N1), STR(N2))))
 
 int main(void) {
     printf("Привет мир\nМы из ");
-    #if __POCC__
-        printf("__POCC__ %d\n", __POCC__);
-    #endif
-    #if __ORANGEC__
-        printf("__ORANGEC_MAJOR__.__ORANGEC_MINOR__ %d.%d\n",
-                __ORANGEC_MAJOR__, __ORANGEC_MINOR__);
-    #endif
-    #if __clang_major__
-        printf("__clang_major__.__clang_minor__ %d.%d\n",
-                __clang_major__, __clang_minor__);
-    #endif
-    #if __GNUC__
-        printf("__GNUC__.__GNUC_MINOR__ %d.%d\n",
-                __GNUC__, __GNUC_MINOR__);
-    #endif
-    #if _MSC_VER
-        printf("_MSC_VER %d\n", _MSC_VER);
-    #endif
-    #if __INTEL_LLVM_COMPILER
-        printf("__INTEL_LLVM_COMPILER %d\n", __INTEL_LLVM_COMPILER);
-    #endif
-    #if __LCC__
-        printf("__LCC__.__LCC_MINOR__ %d.%d\n",
-                __LCC__, __LCC_MINOR__);
-    #endif
-    #if __STDC_VERSION__
-        printf("__STDC_VERSION__ = %ldL\n", __STDC_VERSION__);
-    #elif __STDC__
-        printf("Don't defined __STDC_VERSION__, __STDC__=%d\n", __STDC__);
-    #else
-        printf("Don't defined __STDC__ and __STDC_VERSION__\n");
-    #endif
-    #define STR(S)  #S
-    #define DUMP(X) printf(#X "=%s\n", STR(X))
+    P2(__clang_major__, __clang_minor__);
+    P2(__GNUC__, __GNUC_MINOR__);
+    P(__INTEL_COMPILER);
+    P(__INTEL_LLVM_COMPILER);
+    P2(__LCC__, __LCC_MINOR__);
+    P(_MSC_VER);
+    P2(__CUDACC_VER_MAJOR__, __CUDACC_VER_MINOR__);
+    P2(__NVCOMPILER_MAJOR__, __NVCOMPILER_MINOR__);
+    P(__ORANGEC__);
+    P(__POCC__);
+    P(__SUNPRO_C);
+    P(__SUNPRO_CC);
+    P(__TINYC__);
+    printf("\n");
+    P(__STRICT_ANSI__);
+    P(__STDC_NO_VLA__);
+    P(__STDC_VERSION__);
+    P(__STDC__);
+    P(__cplusplus);
+    printf("\n---\n");
     DUMP(TEST_DEFINITIONS);
     DUMP(TEST_DEFINITIONS_VAL);
 }
