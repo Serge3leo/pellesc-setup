@@ -4,7 +4,5 @@
 
 # Based on `Platform/Windows-MSVC.cmake` and Pelles C `.ppj` templates
 
-include(Platform/Windows-PellesC)
-__windows_compiler_pellesc(C)
-
-# TODO set(CMAKE_C_DEPENDS_USE_COMPILER TRUE)
+# This file is loaded when Pelles C is used for the ASM language.
+# See: Platform/Windows-PellesC-ASM.cmake

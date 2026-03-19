@@ -23,7 +23,24 @@ if (NOT (NOT idm STREQUAL idm_n AND
          ID_PELLESC STREQUAL m_pellesc AND
          ID_LATER STREQUAL m_msvc AND
          c_pellesc LESS c_msvc))
-    message(FATAL_ERROR "Can't install ${ID_PELLESC} modules")
+    message(FATAL_ERROR "Can't install ${ID_PELLESC} modules: '${p_idm}'")
+endif ()
+
+set(p_adm "${CMAKE_ROOT}/Modules/CMakeDetermineASMCompiler.cmake")
+file(READ "${p_adm}" adm)
+
+set(asm_patch "
+    # pellesc-msys2 patch
+    list(APPEND CMAKE_ASM\${ASM_DIALECT}_COMPILER_ID_VENDORS ${ID_PELLESC})
+    set(CMAKE_ASM\${ASM_DIALECT}_COMPILER_ID_VENDOR_FLAGS_${ID_PELLESC} )
+    set(CMAKE_ASM\${ASM_DIALECT}_COMPILER_ID_VENDOR_REGEX_${ID_PELLESC} \"Pelles Macro Assembler\")
+    ")
+string(REGEX REPLACE
+    "(\n[ \t]+${ASM_PREV}[ \t]*\n)([ \t]+${ASM_NEXT}[ \t]*\n)"
+       "\\1${asm_patch}\n\\2"
+       adm_n "${adm}")
+if ("${adm}" STREQUAL "${adm_n}")
+    message(FATAL_ERROR "Can't install ${ID_PELLESC} modules: '${p_adm}'")
 endif ()
 
 file(GLOB_RECURSE ifs LIST_DIRECTORIES false
@@ -36,4 +53,6 @@ endforeach ()
 
 file(RENAME "${p_idm}" "${p_idm}.pre-install")
 file(WRITE "${p_idm}" "${idm_n}")
-message("install: to ${p_idm}")
+file(RENAME "${p_adm}" "${p_adm}.pre-install")
+file(WRITE "${p_adm}" "${adm_n}")
+message("install: to ${p_idm} and ${p_adm}")

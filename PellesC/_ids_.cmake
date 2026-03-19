@@ -17,3 +17,7 @@ set(ID_NEXT "Bruce")
 
 # ID_PELLESC must be before
 set(ID_LATER "MSVC")
+
+# Install ASM detect between:
+set(ASM_PREV "# Table of per-vendor compiler id flags with expected output.")
+set(ASM_NEXT "list.APPEND CMAKE_ASM.{ASM_DIALECT}_COMPILER_ID_VENDORS GNU .")

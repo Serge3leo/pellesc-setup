@@ -45,6 +45,8 @@ or
 ```
 
 An example with a CMake project can be see:
+  - [Learn CMake on GitHub multiple platforms](
+    https://github.com/Serge3leo/learn-cmake/blob/main/.github/workflows/learn_cmake.yml);
   - [cmake-multi-platform.yml](.github/workflows/cmake-multi-platform.yml);
   - [C23/C++14 platform independent implementation of C2y countof()](
     https://github.com/Serge3leo/countof_ns/blob/main/.github/workflows/cmake-multi-platform.yml).
@@ -55,6 +57,11 @@ An example with a CMake project can be see:
   - Default: `true`
 
 To speed up re-use, cache `MSYS2` and the installation directory Pelles C.
+
+It may be useful to use additional workflows to delete caches that are unlikely
+to be used (after a PR is closed, etc.). Templates for such workflows: [Clean
+Cache Action]( https://github.com/marketplace/actions/clean-cache) or
+https://github.com/marketplace/actions/clean-cache-action .
 
 ## cmake-module
   - Type: `string`

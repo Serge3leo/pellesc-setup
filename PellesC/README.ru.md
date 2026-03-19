@@ -13,7 +13,7 @@
 cmake -P PellesC\install.cmake
 ```
 
-Если на зарегистрированы.  Копирует модули в `CMAKE_ROOT` и регистрирует Pelles
+Если не зарегистрированы.  Копирует модули в `CMAKE_ROOT` и регистрирует Pelles
 C.
 
 ## Удаление
@@ -29,6 +29,10 @@ cmake -P PellesC\detect.cmake
 ```
 
 Проверяет регистрацию Pelles C для текущего CMake.
+
+## Известные особенности и ограничения
+
+- Политика CMP0197 не реализована (32-бит не проверен).
 
 #  Ссылки
 - Discourse: [Contribution to the Pelles C Module](
