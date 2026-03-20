@@ -60,7 +60,7 @@ Pelles C.
 
 Возможно будет полезно использовать дополнительные рабочие процессы для
 удаления тех кэшей, использование которых становится маловероятным (после
-закрытия PR и т.п.). Шаблоны таких процессов: [Clean Cache Action](
+закрытия PR и т.п.).  Шаблоны таких процессов: [Clean Cache Action](
 https://github.com/marketplace/actions/clean-cache) или
 https://github.com/marketplace/actions/clean-cache-action .
 

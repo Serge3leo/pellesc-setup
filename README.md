@@ -59,7 +59,7 @@ An example with a CMake project can be see:
 To speed up re-use, cache `MSYS2` and the installation directory Pelles C.
 
 It may be useful to use additional workflows to delete caches that are unlikely
-to be used (after a PR is closed, etc.). Templates for such workflows: [Clean
+to be used (after a PR is closed, etc.).  Templates for such workflows: [Clean
 Cache Action]( https://github.com/marketplace/actions/clean-cache) or
 https://github.com/marketplace/actions/clean-cache-action .
 
