@@ -2,14 +2,15 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
-file(REAL_PATH "_ids_.cmake" ids BASE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}")
-include(${ids})
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}")
+include(_patches_)
 
 message("detect: CMAKE_ROOT=${CMAKE_ROOT}")
-file(READ ${CMAKE_ROOT}/Modules/CMakeCompilerIdDetection.cmake idm)
-if (NOT idm MATCHES "\n[ \t]+${ID_PELLESC}[ \t]*\n")
-    message("Don't detect ID_PELLESC='${ID_PELLESC}'")
+set(fail 0)
+ps_detect(IdDetection "${IdDetection_detect}" fail)
+ps_detect(DetermineASM "${DetermineASM_detect}" fail)
+if (fail)
     cmake_language(EXIT 1)
 endif ()
-message("Ok, detect ID_PELLESC='${ID_PELLESC}'")
+message("Ok, detect IdDetection, DetermineASM")
 cmake_language(EXIT 0)

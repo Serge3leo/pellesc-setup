@@ -2,57 +2,23 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
-file(REAL_PATH "_ids_.cmake" ids BASE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}")
-include(${ids})
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}")
+include(_patches_)
 
 message("install: CMAKE_ROOT=${CMAKE_ROOT}")
-set(p_idm "${CMAKE_ROOT}/Modules/CMakeCompilerIdDetection.cmake")
-file(READ "${p_idm}" idm)
-
-string(REGEX REPLACE
-    "(\n[ \t]+${ID_PREV}[ \t]*\n)([ \t]+${ID_NEXT}[ \t]*\n)"
-       "\\1        # pellesc-msys2 patch\n        ${ID_PELLESC}\n\\2"
-       idm_n "${idm}")
-string(REGEX MATCHALL "\n[ \t]+(${ID_PELLESC})[ \t]*\n" m_pellesc "${idm_n}")
-string(STRIP "${m_pellesc}" m_pellesc)
-string(REGEX MATCHALL "\n[ \t]+(${ID_LATER})[ \t]*\n" m_msvc "${idm_n}")
-string(STRIP "${m_msvc}" m_msvc)
+file(READ "${CMAKE_ROOT}/Modules/${IdDetection_module}" idm)
+file(READ "${CMAKE_ROOT}/Modules/${DetermineASM_module}" adm)
+set(fail 0)
+ps_apply_patch("${idm}" IdDetection idm_n fail)
+ps_apply_patch("${adm}" DetermineASM adm_n fail)
 string(FIND "${idm_n}" "${ID_PELLESC}" c_pellesc)
 string(FIND "${idm_n}" "${ID_LATER}" c_msvc)
-if (NOT (NOT idm STREQUAL idm_n AND
-         ID_PELLESC STREQUAL m_pellesc AND
-         ID_LATER STREQUAL m_msvc AND
-         c_pellesc LESS c_msvc))
-    message(FATAL_ERROR "Can't install ${ID_PELLESC} modules: '${p_idm}'")
+if (fail)
+    message(FATAL_ERROR "Can't install all patches")
 endif ()
-
-set(p_adm "${CMAKE_ROOT}/Modules/CMakeDetermineASMCompiler.cmake")
-file(READ "${p_adm}" adm)
-
-set(asm_patch "
-    # pellesc-msys2 patch
-    list(APPEND CMAKE_ASM\${ASM_DIALECT}_COMPILER_ID_VENDORS ${ID_PELLESC})
-    set(CMAKE_ASM\${ASM_DIALECT}_COMPILER_ID_VENDOR_FLAGS_${ID_PELLESC} )
-    set(CMAKE_ASM\${ASM_DIALECT}_COMPILER_ID_VENDOR_REGEX_${ID_PELLESC} \"Pelles Macro Assembler\")
-    ")
-string(REGEX REPLACE
-    "(\n[ \t]+${ASM_PREV}[ \t]*\n)([ \t]+${ASM_NEXT}[ \t]*\n)"
-       "\\1${asm_patch}\n\\2"
-       adm_n "${adm}")
-if ("${adm}" STREQUAL "${adm_n}")
-    message(FATAL_ERROR "Can't install ${ID_PELLESC} modules: '${p_adm}'")
+if (c_pellesc GREATER_EQUAL c_msvc)
+    message(FATAL_ERROR "${ID_PELLESC} must be before ${ID_LATER}")
 endif ()
-
-file(GLOB_RECURSE ifs LIST_DIRECTORIES false
-     RELATIVE "${CMAKE_CURRENT_LIST_DIR}"
-     "${CMAKE_CURRENT_LIST_DIR}/Modules/*${ID_PELLESC}*.cmake")
-foreach (f IN LISTS ifs)
-    message("${f}")
-    file(COPY_FILE "${CMAKE_CURRENT_LIST_DIR}/${f}" "${CMAKE_ROOT}/${f}")
-endforeach ()
-
-file(RENAME "${p_idm}" "${p_idm}.pre-install")
-file(WRITE "${p_idm}" "${idm_n}")
-file(RENAME "${p_adm}" "${p_adm}.pre-install")
-file(WRITE "${p_adm}" "${adm_n}")
-message("install: to ${p_idm} and ${p_adm}")
+ps_install("${CMAKE_CURRENT_LIST_DIR}/Modules")
+ps_save("${CMAKE_ROOT}/Modules/${DetermineASM_module}" "pre-install" "${adm_n}")
+ps_save("${CMAKE_ROOT}/Modules/${IdDetection_module}" "pre-install" "${idm_n}")
