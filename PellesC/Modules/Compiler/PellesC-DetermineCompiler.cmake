@@ -4,7 +4,8 @@
 
 # Pelles C bug (TODO: ID & versions), TODO: I can try `cc -x`
 string(TOLOWER "${CMAKE_C_COMPILER}" _pellesc_lower_)
-if (WIN32 AND "${_pellesc_lower_}" MATCHES " .*pelles *c.bin.cc")
+if (WIN32 AND "${_pellesc_lower_}" MATCHES "pelles.*c.*bin.*cc"
+    AND "${_pellesc_lower_}" MATCHES " ")
   message("WARNING: PellesC have space in CMAKE_C_COMPILER=\"${CMAKE_C_COMPILER}\", use SFN: <DRIVE>:\\PROGRA~1\\PellesC\\Bin...")
 endif ()
 

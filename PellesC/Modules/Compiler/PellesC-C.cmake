@@ -29,8 +29,19 @@ if (CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL 12.0)
   set(CMAKE_C_STANDARD_LATEST 23)
 elseif (CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL 11.0)
   # PellesC 11.00.3 has `-std=c2x`, but `__STDC_VERSION__=202912L`
+
+  # By docs `-std=c17` is default, but `__STDC_VERSION__=202912L` without
+  # arguments. Need to force `-std=c17`
+
   # TODO It is unclear why it was not possible to declare 17 as latest (cmake
   # version 4.2.3)
+
+  foreach (v IN ITEMS CMAKE_C_COMPILER_FORCED CMAKE_C_STANDARD_COMPUTED_DEFAULT
+                      CMAKE_C_EXTENSIONS_COMPUTED_DEFAULT)
+    message(VERBOSE "PellesC-C: ${v}=${${v}}")
+  endforeach ()
+  set(CMAKE_C_STANDARD_COMPUTED_DEFAULT 11)  # Force explicit setting
+  message(VERBOSE "PellesC-C: Corrected CMAKE_C_STANDARD_COMPUTED_DEFAULT=${CMAKE_C_STANDARD_COMPUTED_DEFAULT}")
 
   set(CMAKE_C23_STANDARD_COMPILE_OPTION -std=c2x)
   set(CMAKE_C23_EXTENSION_COMPILE_OPTION -Ze -Zx -std=c2x)
