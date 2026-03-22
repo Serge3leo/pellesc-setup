@@ -1,9 +1,8 @@
 [![CMake on multiple platforms](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml)
 
-# pellesc-msys2
+# pellesc-setup
 Installs the Pelles C compiler and configures paths and environment variables
-for the possibility of using the CMake generator "MSYS Makefiles" in
-conjunction with [MSYS2](https://github.com/marketplace/actions/setup-msys2).
+for the possibility of using the CMake.
 
 Explicit indication of `-DCMAKE_C_COMPILER=pocc` is supported, preferably.  It
 is also possible to set `cc` or automatic detection, but limited, see below.
@@ -12,8 +11,8 @@ See also [CMake compiler and detections modules for Pells C](
 PellesC/README.md).
 
 ## WARNING
-Chocolatey packages `12.0.2` (pocc 12.00.1) and `11.0.2` (pocc 11.00.3) work
-with CMake seems to be working only under Windows 2022.
+Chocolatey repository versions `12.0.2` (pocc 12.00.1) and `11.0.2` (pocc
+11.00.3) work with CMake seems to be working only under Windows 2022.
 
 The `cc` command has limitations:
 - Bugs if `cc` is called on a path that has spaces;
@@ -56,12 +55,21 @@ An example with a CMake project can be see:
   - Type: `boolean`
   - Default: `true`
 
-To speed up re-use, cache `MSYS2` and the installation directory Pelles C.
+To speed up re-use, cache installation directory Pelles C.
 
 It may be useful to use additional workflows to delete caches that are unlikely
 to be used (after a PR is closed, etc.).  Templates for such workflows: [Clean
 Cache Action]( https://github.com/marketplace/actions/clean-cache) or
 https://github.com/marketplace/actions/clean-cache-action .
+
+## cmake
+  - Type: `string`
+  - Allowed values: executable command (path) `cmake`
+  - Default value: `cmake`
+
+Sets the `cmake` command used when installing support modules (i.e.
+after installation, this particular `cmake` command will support the Pelles
+C compiler).
 
 ## cmake-module
   - Type: `string`
@@ -78,12 +86,6 @@ they are not present in `PellesC`.
 ### no
 Do not install Pelles C support modules.
 
-## cmake-update
-  - Type: `boolean`
-  - Default: `false`
-
-Instal last CMake version from MSYS2.
-
 ## env-workaround
   - Type: `boolean`
   - Default: `false`
@@ -93,14 +95,6 @@ Convert the environment variables to SFN form, i.e. if the value is
 value is `location` `C:\Program Files\PellesC`, all occurrences will be
 replaced with `C:\PROGRA~1\PellesC` (the number may vary depending on the
 specific installation).
-
-## install
-  - Type: `string`
-  - Allowed values: a whitespace separated list of packages
-
-Installing additional packages after updating the system is supported through
-option install.  See [Setup MSYS2, install](
-https://github.com/msys2/setup-msys2?tab=readme-ov-file#install).
 
 ## key-prefix
   - Type: `string`
@@ -116,24 +110,6 @@ If explicitly set to empty, the installation directory is set by the
 installation program Pelles C, for existing versions `C:\Program
 Files\PellesC`.
 
-## msystem
-  - Type: `string`
-  - Allowed values: `msys | mingw64 | mingw32 | ucrt64 |
-    clang64 | clangarm64 | skip`
-  - Default: `mingw64`
-
-Sets the value of the environment variable [`MSYSTEM`](
-https://www.msys2.org/docs/environments) and `PATH`.  Case is ignored.  If
-equal to `skip`, then the MSYS2 configuration is skipped.
-
-## pacboy
-  - Type: `string`
-  - Allowed values: a whitespace separated list of packages
-
-Installing additional packages with pacboy after updating the system is
-supported through option pacboy.  See [Setup MSYS2, pacboy](
-https://github.com/msys2/setup-msys2?tab=readme-ov-file#pacboy).
-
 ## verbose
   - Type: `boolean`
   - Default: `false`
@@ -147,8 +123,16 @@ Show the paths and versions of the main components: `pocc`, `make`, `cmake`, ...
 If not specified, version `13.01-git-lfs` from this repository is installed
 (13.01, Dec 23, 2025, [https://www.pellesc.se](https://www.pellesc.se)), it not
 at Chocolatey Community).  Otherwise, the specified version will be installed.
-The list of available versions is given below:
+If you explicitly set an empty value, the latest version from Chocolatey
+Community will be installed.  The list of available versions is given below:
 [https://community.chocolatey.org/packages/pelles-c](https://community.chocolatey.org/packages/pelles-c).
+
+# Outputs
+
+If the `cmake-module` parameter was not equal to `no`:
+
+- CMAKE_ROOT - The full path to the PellesC module installation directory;
+- CMAKE_COMMAND - The full path to the `cmake` command.
 
 # Contributing
 Issues or PRs are accepted and welcome.

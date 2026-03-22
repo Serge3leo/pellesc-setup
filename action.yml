@@ -1,6 +1,6 @@
 ---
-name: PellesC MSYS2
-description: Setup Pelles C with MSYS2 for CMake
+name: pellesc-setup
+description: Setup Pelles C for CMake
 branding:
   color: blue
   icon: terminal
@@ -21,11 +21,6 @@ inputs:
     required: false
     description: Short File Name (SFN) in PATH and environments variables
     default: false
-  install:
-    required: false
-    description: >-
-      After installation and/or update, install additional packages through
-      pacman
   key-prefix:
     required: false
     description: Add prefix to cache key (for refresh or identification)
@@ -54,7 +49,7 @@ runs:
   using: composite
   steps:
     - name: Check Windows version compatible with PellesC CMake modules
-      if: ${{ 'no' != inputs.cmake-module }}
+      if: ${{ 'no' != inputs.cmake-module && '' != inputs.version }}
       shell: pwsh
       run: |
         if ($${{ fromJSON(inputs.verbose) }}) {
