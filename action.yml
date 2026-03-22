@@ -114,8 +114,7 @@ runs:
         "pd=$pd`n" + `
         "sa=$sa`n" + `
         "ia=$ia`n" + `
-        "key=$key`n" `
-          | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+        "key=$key`n" >> $env:GITHUB_OUTPUT
 
     - name: Restore cached Pelles C directory
       id: cache-pd
@@ -197,10 +196,8 @@ runs:
         }
         "PellesCDir=$pd_pellescdir`n" + `
         "INCLUDE=$pd_include`n" + `
-        "LIB=$pd_lib`n" `
-          | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        "$pd_path`n" `
-          | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        "LIB=$pd_lib`n" >> $env:GITHUB_ENV
+        "$pd_path`n" >> $env:GITHUB_PATH
 
     - name: Show version
       if: ${{ fromJSON(inputs.verbose) }}
@@ -225,4 +222,4 @@ runs:
       shell: pwsh
       run: |
         &"${{ inputs.cmake }}" -P "$env:GITHUB_ACTION_PATH\cmake_report.cmake" `
-          | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          >> $env:GITHUB_OUTPUT
