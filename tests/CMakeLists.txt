@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
-# TODO
-add_compile_definitions(TEST_DEFINITIONS TEST_DEFINITIONS_VAL="inc.h")
-# add_compile_definitions(TEST_DEFINITIONS TEST_DEFINITIONS_VAL=Test_1917)
+# TODO In Pelles C 14.0-rc1, the behavior changed but remained incorrect
+# add_compile_definitions(TEST_DEFINITIONS TEST_DEFINITIONS_VAL="inc.h")
+add_compile_definitions(TEST_DEFINITIONS TEST_DEFINITIONS_VAL=Test_1917)
 
 add_executable(hello hello.c)
 add_test(NAME hello COMMAND hello)
