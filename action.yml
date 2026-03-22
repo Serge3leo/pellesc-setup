@@ -105,12 +105,6 @@ runs:
           $key += $pd -replace "[^a-z]", ""
         }
         mkdir "$pd"
-        <# TODO: probably don't needed?
-          if ($${{ fromJSON(inputs.env-workaround) }}) {
-            $key += "_SFN"
-          }
-          $key += "_${{ runner.os }}"
-         #>
         "pd=$pd`n" + `
         "sa=$sa`n" + `
         "ia=$ia`n" + `
