@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
-# TODO In Pelles C 14.0-rc1, the behavior changed but remained incorrect
+# TODO
 # add_compile_definitions(TEST_DEFINITIONS TEST_DEFINITIONS_VAL="inc.h")
 add_compile_definitions(TEST_DEFINITIONS TEST_DEFINITIONS_VAL=Test_1917)
 

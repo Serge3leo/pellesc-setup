@@ -91,6 +91,6 @@ jobs:
 
       - name: Run Windows
         run: |
-          cd build
-          ./hello
-          ./bsd_echo my args
+          cd build\tests
+          .\hello
+          .\bsd_echo my args
