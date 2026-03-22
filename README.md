@@ -4,15 +4,15 @@
 Installs the Pelles C compiler and configures paths and environment variables
 for the possibility of using the CMake.
 
-Explicit indication of `-DCMAKE_C_COMPILER=pocc` is supported, preferably.  It
-is also possible to set `cc` or automatic detection, but limited, see below.
+It is preferable to use the explicit setting `cmake -DCMAKE_C_COMPILER=pocc`.
+It is also possible to set `cc` or use automatic detection, but this is
+limited, see below.
 
 See also [CMake compiler and detections modules for Pells C](
 PellesC/README.md).
 
 ## WARNING
-Chocolatey repository versions `12.0.2` (pocc 12.00.1) and `11.0.2` (pocc
-11.00.3) work with CMake seems to be working only under Windows 2022.
+Versions from the Chocolatey repository 12.0.2 (pocc 12.00.1) and 11.0.2 (pocc 11.00.3) work with CMake only on Windows 2022.
 
 The `cc` command has limitations:
 - Bugs if `cc` is called on a path that has spaces;

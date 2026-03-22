@@ -16,5 +16,5 @@ if errorlevel 1 exit /b
 ctest --output-on-failure --build-config %build_type% ^
       --test-dir %build_output_dir%
 if errorlevel 1 exit /b
-%build_output_dir%\hello
+%build_output_dir%\tests\hello
 if errorlevel 1 exit /b

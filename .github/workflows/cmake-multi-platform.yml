@@ -32,7 +32,7 @@ jobs:
         include:
           - version: 13.01-git-lfs
             os: windows-latest
-            c_compiler: cc  # One test without `-DCMAKE_C_COMPILER=...`
+            c_compiler: cc  # One test with `-DCMAKE_C_COMPILER=cc`
             build_type: Release
             generator: "MSYS Makefiles"
 
