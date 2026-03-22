@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
-      fail-fast: true
+      fail-fast: false
 
       matrix:
         version: [11.0.2, 12.0.2, 13.01-git-lfs, 14.0-rc1-git-lfs]
