@@ -202,7 +202,7 @@ runs:
             "$setup.sha256: $shasum"
             $hash
           }
-          if ("$shasum" -ne $shasum.Hash) {
+          if ($shasum -ine $shasum.Hash) {
             Write-Error "'$setup': misconfigured or corrupted"
             Exit 2
           }
