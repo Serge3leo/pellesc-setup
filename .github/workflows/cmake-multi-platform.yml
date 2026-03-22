@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
-      fail-fast: false
+      fail-fast: true
 
       matrix:
         version: [11.0.2, 12.0.2, 13.01-git-lfs, 14.0-rc1-git-lfs]
@@ -32,7 +32,9 @@ jobs:
         include:
           - version: 13.01-git-lfs
             os: windows-latest
-            c_compiler: ''  # One test without `-DCMAKE_C_COMPILER=...`
+            c_compiler:  # One test without `-DCMAKE_C_COMPILER=...`
+            build_type: Release
+            generator: "MSYS Makefiles"
 
     steps:
       - uses: actions/checkout@v6
