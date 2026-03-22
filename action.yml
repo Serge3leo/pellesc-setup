@@ -67,7 +67,7 @@ runs:
         if ($${{ fromJSON(inputs.verbose) }}) {
           [System.Environment]::OSVersion
         }
-        $pv = "${{ inputs.version }}" -replace "[^0-9.]*$"
+        $pv = "${{ inputs.version }}" -replace "[^0-9.].*$"
         $pw11 = "13.0"
         $w11bld = 22000
         if (([version]$pv -lt [version]$pw11) -and
@@ -196,14 +196,13 @@ runs:
             # For `./` may use
             git lfs pull
           }
-          $shasum = (Get-FileHash $setup)
+          $shasum = (Get-Content "$setup.sha256")
+          $hash = (Get-FileHash $setup)
           if ($${{ fromJSON(inputs.verbose) }}) {
-            $shasum
+            "$setup.sha256: $shasum"
+            $hash
           }
-          # TODO setup.exe.sha512, may be by next version?
-          if ( `
-          '84E586D1FCA7B9FEC55BD294A103AF16A045D1DF1BCB77A3F4FDF13D8F239141' `
-              -ne $shasum.Hash) {
+          if ("$shasum" -ne $shasum.Hash) {
             Write-Error "'$setup': misconfigured or corrupted"
             Exit 2
           }
