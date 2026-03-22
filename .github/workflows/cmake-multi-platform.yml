@@ -40,22 +40,19 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Lint
-        if: matrix.c_compiler == ''
+        if: matrix.c_compiler == 'cc'  # One test
         run: |
           python -m pip install yamllint
           python -m yamllint --list-file .
           python -m yamllint .
 
-      - name: Test action (Setup PellesC with pre-installed MSYS2 for CMake)
+      - name: Test action (Setup Pelles C for CMake)
         uses: ./
         with:
           version: ${{ matrix.version }}
           verbose: true
           # location:  # Default of installer: `C:\Program Files\PellesC`
           # env-workaround: true  # Needed workaround
-          # cmake-update: true
-          # install: patch
-          # pacboy: clang:p
 
       - name: Check compiler
         working-directory: ./tests
