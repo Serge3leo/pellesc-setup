@@ -70,14 +70,14 @@ jobs:
           del hello.obj,hello.exe
 
       - name: Configure CMake
-        run: >
-          cmake -B build
-          ${{ (matrix.c_compiler &&
-               format('-DCMAKE_C_COMPILER={0}', matrix.c_compiler)) || '' }}
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          -G "${{ matrix.generator }}"
-          -S .
-          ${{ matrix.cmake_add }}
+        run: |
+          cmake -B build `
+            ${{ (matrix.c_compiler && `
+                 format('-DCMAKE_C_COMPILER={0}', matrix.c_compiler)) || '' }} `
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} `
+            -G "${{ matrix.generator }}" `
+            -S . `
+            ${{ matrix.cmake_add }}
 
       - name: Build
         run: cmake --build build --config ${{ matrix.build_type }}
