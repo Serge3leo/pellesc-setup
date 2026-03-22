@@ -5,8 +5,11 @@
 # Pelles C bug (TODO: ID & versions), TODO: I can try `cc -x`
 string(TOLOWER "${CMAKE_C_COMPILER}" _pellesc_lower_)
 if (WIN32 AND "${_pellesc_lower_}" MATCHES "pelles.*c.*bin.*cc"
-    AND "${_pellesc_lower_}" MATCHES " ")
-  message("WARNING: PellesC have space in CMAKE_C_COMPILER=\"${CMAKE_C_COMPILER}\", use SFN: <DRIVE>:\\PROGRA~1\\PellesC\\Bin...")
+    AND "${_pellesc_lower_}" MATCHES " "
+    AND NOT "x${testflags}" STREQUAL "x")
+  message("WARNING: PellesC have space in \"${CMAKE_C_COMPILER}\","
+          " use -DCMAKE_C_COMPILER=pocc or"
+          " SFN: <DRIVE>:\\PROGRA~1\\PellesC\\Bin... in PATH")
 endif ()
 
 set(_compiler_id_pp_test "defined(__POCC__)")
