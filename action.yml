@@ -114,7 +114,7 @@ runs:
         "pd=$pd`n" + `
         "sa=$sa`n" + `
         "ia=$ia`n" + `
-        "key=$key`n" >> $env:GITHUB_OUTPUT
+        "key=$key" >> $env:GITHUB_OUTPUT
 
     - name: Restore cached Pelles C directory
       id: cache-pd
@@ -196,8 +196,8 @@ runs:
         }
         "PellesCDir=$pd_pellescdir`n" + `
         "INCLUDE=$pd_include`n" + `
-        "LIB=$pd_lib`n" >> $env:GITHUB_ENV
-        "$pd_path`n" >> $env:GITHUB_PATH
+        "LIB=$pd_lib" >> $env:GITHUB_ENV
+        "$pd_path" >> $env:GITHUB_PATH
 
     - name: Show version
       if: ${{ fromJSON(inputs.verbose) }}
