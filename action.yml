@@ -168,8 +168,6 @@ runs:
 
     - name: Restore cached Pelles C directory
       id: cache-pd
-      concurrency:
-        group: ${{ steps.pd.outputs.key }}
       uses: actions/cache/restore@v5
       with:
         key: ${{ steps.pd.outputs.key }}
@@ -177,8 +175,6 @@ runs:
 
     - name: Install Pelles C
       if: steps.cache-pd.outputs.cache-hit != 'true'
-      concurrency:
-        group: ${{ steps.pd.outputs.key }}
       shell: pwsh
       run: |
         $base = "dist\${{ inputs.version }}\setup.exe"
@@ -221,8 +217,6 @@ runs:
 
     - name: Save cached Pelles C directory
       if: steps.cache-pd.outputs.cache-hit != 'true'
-      concurrency:
-        group: ${{ steps.pd.outputs.key }}
       uses: actions/cache/save@v5
       with:
         key: ${{ steps.pd.outputs.key }}
