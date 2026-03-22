@@ -9,16 +9,14 @@ inputs:
     required: false
     description: If caching should be used
     default: true
+  cmake:
+    required: false
+    description: "`cmake` for modules install"
+    default: cmake
   cmake-module:
     required: false
     description: Check PellesC modules, install, if not
     default: check
-  cmake-update:
-    required: false
-    description: >-
-      Instal last CMake version from MSYS2 (probably needed for
-      `env-workaround`)
-    default: false
   env-workaround:
     required: false
     description: Short File Name (SFN) in PATH and environments variables
@@ -35,28 +33,23 @@ inputs:
     required: false
     description: Where to install Pelles C
     default: c:\pellesc
-  msystem:
-    required: false
-    description: >-
-      Variant of the environment to set by default: msys, mingw32, mingw64,
-      ucrt64, clang64, clangarm64 or skip
-    default: mingw64
-  pacboy:
-    required: false
-    description: >-
-      After installation and/or update, install additional packages through
-      pacboy
   verbose:
     required: false
     description: >-
-      Show version and location `pocc`, `make`,
-      `cmake` ... form PATH.
+      Show version and location `pocc`, `make`, `cmake` ... form PATH
     default: false
   version:
     required: false
     description: >-
       A specific version to install. Defaults to GitHub mirrored.
     default: '13.01-git-lfs'
+outputs:
+  CMAKE_COMMAND:
+    description: The full path to the `cmake` executable
+    value: ${{ steps.cmake-report.outputs.CMAKE_COMMAND }}
+  CMAKE_ROOT:
+    description: Modules install directory for `cmake`
+    value: ${{ steps.cmake-report.outputs.CMAKE_ROOT }}
 runs:
   using: composite
   steps:
@@ -80,58 +73,21 @@ runs:
           Exit 1
         }
 
-    - name: Setup MSYS2
-      if: ${{ 'skip' != inputs.msystem }}
-      id: msys2
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: ${{ inputs.msystem }}
-        cache: ${{ inputs.cache }}
-        # Workaround, `setup-msys2` don't accepted empty string
-        install: ${{ case('' == inputs.install, 'pactoys', inputs.install) }}
-        pacboy: >-
-          binutils:p
-          make:p
-          ${{ case(fromJSON(inputs.cmake-update), 'cmake:p', '') }}
-          ${{ inputs.pacboy }}
-
-    - name: MSYS2 PATH
-      if: ${{ 'skip' != inputs.msystem }}
-      shell: pwsh
-      run: |
-        $base = "${{ steps.msys2.outputs.msys2-location }}"
-        $msys = "${{ inputs.msystem }}".ToLower()
-        if ($${{ fromJSON(inputs.verbose) }}) {
-          "MSYS2 PATH:"
-          "base=$base"
-          "msys=$msys"
-          "MSYSTEM=$env:MSYSTEM"
-          "PATH=$env:PATH"
-          "---"
-        }
-        "$base\usr\bin`n" + `
-        "$base\$msys\bin`n" `
-          | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        if ("" -eq "$env:MSYSTEM") {
-          "MSYSTEM=" + $msys.ToUpper() `
-            | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        }
-
     - name: Install CMake PellesC modules
       if: ${{ 'no' != inputs.cmake-module }}
       shell: pwsh -File {0}
       run: |
         $pm = "$env:GITHUB_ACTION_PATH\PellesC"
         if ("always" -eq "${{ inputs.cmake-module }}") {
-          cmake -P "$pm\uninstall.cmake"
-          cmake -P "$pm\install.cmake"
+          &"${{ inputs.cmake }}" -P "$pm\uninstall.cmake"
+          &"${{ inputs.cmake }}" -P "$pm\install.cmake"
         } else {
-          cmake -P "$pm\detect.cmake"
+          &"${{ inputs.cmake }}" -P "$pm\detect.cmake"
           if (0 -ne $LASTEXITCODE) {
-            cmake -P "$pm\install.cmake"
+            &"${{ inputs.cmake }}" -P "$pm\install.cmake"
           }
         }
-        cmake -P "$pm\detect.cmake"
+        &"${{ inputs.cmake }}" -P "$pm\detect.cmake"
         if ($${{ fromJSON(inputs.verbose) }}) {
           "inputs.cmake-module: ${{ inputs.cmake-module }}"
           "---"
@@ -163,7 +119,7 @@ runs:
         "pd=$pd`n" + `
         "sa=$sa`n" + `
         "ia=$ia`n" + `
-        "key=$key`n"
+        "key=$key`n" `
           | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
     - name: Restore cached Pelles C directory
@@ -262,14 +218,16 @@ runs:
         "LIB=$env:LIB"
         get-command pocc
         pocc | Select-Object -First 1
-        if ("skip" -ne "${{ inputs.msystem }}") {
-          "MSYSTEM=$env:MSYSTEM"
-          get-command pacman
-          pacman -V  | Select-Object -First 2
-        }
-        foreach ($prg in 'ar', 'make', 'cmake', 'choco') {
+        foreach ($prg in 'ar', 'make', '${{ inputs.cmake }}', 'choco') {
           try {
             get-command $prg
             &$prg --version | Select-Object -First 1
           } catch {}
         }
+
+    - id: cmake-report
+      if: ${{ 'no' != inputs.cmake-module }}
+      shell: pwsh
+      run: |
+        &"${{ inputs.cmake }}" -P cmake_report.cmake `
+          | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
