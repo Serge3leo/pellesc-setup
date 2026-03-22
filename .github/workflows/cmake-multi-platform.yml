@@ -58,6 +58,7 @@ jobs:
           # pacboy: clang:p
 
       - name: Check compiler
+        working-directory: ./tests
         run: |
           if ("" -eq "${{ matrix.c_compiler }}") {
             $cc = "cc"
