@@ -1,4 +1,4 @@
-[![CMake on multiple platforms](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml)
+[![CMake on multiple platforms](https://github.com/Serge3leo/pellesc-setup/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Serge3leo/pellesc-setup/actions/workflows/cmake-multi-platform.yml)
 
 # pellesc-setup
 Устанавливает компилятор Pelles C и настраивает пути и переменные для
@@ -30,13 +30,13 @@ https://github.com/Serge3leo/test-pellesc/blob/main/.github/workflows/test-pelle
 
 # Использование
 ```
-  - uses: Serge3leo/pellesc-msys2@v0
+  - uses: Serge3leo/pellesc-setup@v0
 ```
 
 или
 
 ```
-  - uses: Serge3leo/pellesc-msys2@v0
+  - uses: Serge3leo/pellesc-setup@v0
     with:
       version: 12.0.2
       verbose: true

@@ -3,11 +3,11 @@
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
 cmake_minimum_required (VERSION 3.25)
-project(pellesc_msys2
+project(pellesc_setup
         VERSION 0.3.0
         DESCRIPTION
         "Use PellesC in CMake project"
-        HOMEPAGE_URL https://github.com/Serge3leo/pellesc-msys2.git
+        HOMEPAGE_URL https://github.com/Serge3leo/pellesc-setup.git
         LANGUAGES C)
 add_subdirectory(tests)
 enable_testing()

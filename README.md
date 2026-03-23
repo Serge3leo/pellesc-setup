@@ -1,4 +1,4 @@
-[![CMake on multiple platforms](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml)
+[![CMake on multiple platforms](https://github.com/Serge3leo/pellesc-setup/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Serge3leo/pellesc-setup/actions/workflows/cmake-multi-platform.yml)
 
 # pellesc-setup
 Installs the Pelles C compiler and configures paths and environment variables
@@ -31,13 +31,13 @@ workaround it:
 
 # Usage
 ```
-  - uses: Serge3leo/pellesc-msys2@v0
+  - uses: Serge3leo/pellesc-setup@v0
 ```
 
 or
 
 ```
-  - uses: Serge3leo/pellesc-msys2@v0
+  - uses: Serge3leo/pellesc-setup@v0
     with:
       version: 12.0.2
       verbose: true
