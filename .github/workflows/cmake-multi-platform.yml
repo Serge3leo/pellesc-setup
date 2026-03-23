@@ -18,55 +18,45 @@ jobs:
     strategy:
       fail-fast: true
 
-      # Set up a matrix to run the following configurations:
-      #
-      # 1. <Pelles C 13.01-git-lfs, windows-2025-vs2026, "MSYS Makefiles">
-      #    Latest at at Mar 5, 2026
-      #
-      # 2. <Pelles C 12.0.2, windows-2022, "MSYS Makefiles">
-      #
-      # 3. <Pelles C 11.0.2, windows-2022, "MSYS Makefiles">
-      #
-      # To add more build types (Release, Debug, RelWithDebInfo, etc.)
-      # customize the build_type list.
-
       matrix:
-        version: [13.01-git-lfs, 12.0.2, 11.0.2]
+        version: [11.0.2, 12.0.2, 13.01-git-lfs, 14.0-rc1-git-lfs]
+        os: [windows-latest, windows-2022]
+        c_compiler: ['', pocc]
         build_type: [Release]
         generator: ["MSYS Makefiles"]
-        platform: [win32]
         # cmake_add: [--debug-trycompile]
+        exclude:
+          - {version: 11.0.2, os: windows-latest}
+          - {version: 11.0.2, c_compiler: ''}
+          - {version: 12.0.2, os: windows-latest}
         include:
           - version: 13.01-git-lfs
-            os: windows-2025-vs2026
-          - version: 12.0.2
-            c_compiler: cc
-            os: windows-2022
-          - version: 11.0.2
-            c_compiler: pocc
-            os: windows-2022
+            os: windows-latest
+            c_compiler: cc  # One test with `-DCMAKE_C_COMPILER=cc`
+            build_type: Release
+            generator: "MSYS Makefiles"
 
     steps:
       - uses: actions/checkout@v6
 
       - name: Lint
+        if: matrix.c_compiler == 'cc'  # One test
         run: |
           python -m pip install yamllint
           python -m yamllint --list-file .
           python -m yamllint .
 
-      - name: Test action (Setup PellesC with pre-installed MSYS2 for CMake)
+      - name: Test action (Setup Pelles C for CMake)
         uses: ./
         with:
           version: ${{ matrix.version }}
           verbose: true
           # location:  # Default of installer: `C:\Program Files\PellesC`
           # env-workaround: true  # Needed workaround
-          # cmake-update: true
-          # install: patch
-          # pacboy: clang:p
+          # cache: false
 
       - name: Check compiler
+        working-directory: ./tests
         run: |
           if ("" -eq "${{ matrix.c_compiler }}") {
             $cc = "cc"
@@ -83,8 +73,8 @@ jobs:
       - name: Configure CMake
         run: |
           cmake -B build `
-            ${{ (matrix.c_compiler &&
-                 format('-DCMAKE_C_COMPILER={0}', matrix.c_compiler)) || '' }} `
+            ${{ case(matrix.c_compiler == '', '',
+                format('-DCMAKE_C_COMPILER={0}', matrix.c_compiler)) }} `
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} `
             -G "${{ matrix.generator }}" `
             -S . `
@@ -99,6 +89,6 @@ jobs:
 
       - name: Run Windows
         run: |
-          cd build
-          ./hello
-          ./bsd_echo my args
+          cd build\tests
+          .\hello
+          .\bsd_echo my args

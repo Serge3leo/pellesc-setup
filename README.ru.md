@@ -1,28 +1,27 @@
-[![CMake on multiple platforms](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Serge3leo/pellesc-msys2/actions/workflows/cmake-multi-platform.yml)
+[![CMake on multiple platforms](https://github.com/Serge3leo/pellesc-setup/actions/workflows/cmake-multi-platform.yml/badge.svg?branch=main)](https://github.com/Serge3leo/pellesc-setup/actions/workflows/cmake-multi-platform.yml)
 
-# pellesc-msys2
+# pellesc-setup
 Устанавливает компилятор Pelles C и настраивает пути и переменные для
-возможности использования CMake генератора "MSYS Makefiles" совместно с
-[MSYS2](https://github.com/marketplace/actions/setup-msys2).
+возможности использования CMake.
 
-Поддерживается явное указание `-DCMAKE_C_COMPILER=pocc`, предпочтительно.  Так
-же возможно задание `cc` или автоматическое определение, но ограничено,
+Предпочтительно использовать явное указание `cmake -DCMAKE_C_COMPILER=pocc`.
+Так же возможно задание `cc` или автоматическое определение, но ограничено,
 смотрите ниже.
 
 Смотрите так же [CMake модули поддержки Pells C](PellesC/README.ru.md).
 
 ## ПРЕДУПРЕЖДЕНИЕ
-Пакеты Chocolatey `12.0.2` (pocc 12.00.1) и `11.0.2` (pocc 11.00.3) работают с
-CMake, похоже, только под Windows 2022.
+Пакеты из репозитория Chocolatey `12.0.2` (pocc 12.00.1) и `11.0.2` (pocc
+11.00.3) работают с CMake, похоже, только под Windows 2022.
 
 Команда `cc` имеет ограничения:
 - Ошибки, в случае если `cc` вызывается по пути, который имеет пробелы;
-- Версия `11.0.2`, не совместима с Windows 2022/2025;
+- Версия `11.0.2`, несовместима с Windows 2022/2025;
 
 Подробности смотрите [Test Pelles C](
 https://github.com/Serge3leo/test-pellesc/blob/main/.github/workflows/test-pellesc.yml).
 
-Если необходимо CMake автоопределение компилятора `cc`, для её обхода можно
+Если необходимо CMake автоопределение компилятора `cc`, для их обхода можно
 использовать два варианта:
 1. Установку Pelles C в каталог без пробелов в пути (параметр
    [location](#location)).  Используется по умолчанию;
@@ -31,13 +30,13 @@ https://github.com/Serge3leo/test-pellesc/blob/main/.github/workflows/test-pelle
 
 # Использование
 ```
-  - uses: Serge3leo/pellesc-msys2@v0
+  - uses: Serge3leo/pellesc-setup@v0
 ```
 
 или
 
 ```
-  - uses: Serge3leo/pellesc-msys2@v0
+  - uses: Serge3leo/pellesc-setup@v0
     with:
       version: 12.0.2
       verbose: true
@@ -55,14 +54,22 @@ https://github.com/Serge3leo/test-pellesc/blob/main/.github/workflows/test-pelle
   - Тип: `boolean`
   - Значение по умолчанию: `true`
 
-Для ускорения повторного использования, кэшировать `MSYS2` и каталог установки
-Pelles C.
+Для ускорения повторного использования, кэшировать каталог установки Pelles C.
 
 Возможно будет полезно использовать дополнительные рабочие процессы для
 удаления тех кэшей, использование которых становится маловероятным (после
 закрытия PR и т.п.).  Шаблоны таких процессов: [Clean Cache Action](
 https://github.com/marketplace/actions/clean-cache) или
 https://github.com/marketplace/actions/clean-cache-action .
+
+## cmake
+  - Тип: `string`
+  - Допустимые значения: исполняемая команда (путь) `cmake`
+  - Значение по умолчанию: `cmake`
+
+Задаёт команду `cmake`, используемую при установке модулей поддержки (т.е.
+после установки именно эта команда `cmake` будет поддерживать компилятор Pelles
+C).
 
 ## cmake-module
   - Тип: `string`
@@ -78,12 +85,6 @@ https://github.com/marketplace/actions/clean-cache-action .
 ### no
 Не устанавливать модули поддержки Pelles C.
 
-## cmake-update
-  - Тип: `boolean`
-  - Значение по умолчанию: `false`
-
-Устанавливает в MSYS2 последнюю версию CMake.
-
 ## env-workaround
   - Тип: `boolean`
   - Значение по умолчанию: `false`
@@ -93,14 +94,6 @@ https://github.com/marketplace/actions/clean-cache-action .
 `location` `C:\Program Files\PellesC` все вхождения будут заменены на
 `C:\PROGRA~1\PellesC` (цифра может изменяться в зависимости от конкретной
 установки).
-
-## install
-  - Тип: `string`
-  - Допустимые значения: список пакетов, разделенных пробелами
-
-Установка дополнительных пакетов после обновления системы поддерживается с
-помощью опции install.  См. [Setup MSYS2, install](
-https://github.com/msys2/setup-msys2?tab=readme-ov-file#install).
 
 ## key-prefix
   - Тип: `string`
@@ -115,24 +108,6 @@ https://github.com/msys2/setup-msys2?tab=readme-ov-file#install).
 Если явно задано пустым, то каталог установки задаётся программой установки
 Pelles C, для существующих версий `C:\Program Files\PellesC`.
 
-## msystem
-  - Тип: string
-  - Допустимые значения: `msys | mingw64 | mingw32 | ucrt64 | clang64 |
-    clangarm64 | skip`
-  - Значение по умолчанию: `mingw64`
-
-Задаёт значение переменной окружения [`MSYSTEM`](
-https://www.msys2.org/docs/environments) и `PATH`.  Регистр игнорируется.  Если
-равно `skip`, то настройка MSYS2 пропускается.
-
-## pacboy
-  - Тип: `string`
-  - Допустимые значения: список пакетов, разделенных пробелами
-
-Установка дополнительных пакетов после обновления системы поддерживается с
-помощью опции pacboy.  См. [Setup MSYS2, pacboy](
-https://github.com/msys2/setup-msys2?tab=readme-ov-file#pacboy).
-
 ## verbose
   - Тип: `boolean`
   - Значение по умолчанию: `false`
@@ -145,9 +120,17 @@ https://github.com/msys2/setup-msys2?tab=readme-ov-file#pacboy).
 
 Если не задан, устанавливается версия `13.01-git-lfs` из этого репозитория
 (13.01, 23 Дек 2025, [https://www.pellesc.se](https://www.pellesc.se)), которой
-нет у Chocolatey Community).  Иначе будет установлена указанная версия.  Список
-доступных версии приведён:
+нет у Chocolatey Community).  Иначе будет установлена указанная версия.  При
+явном задании пустого значения, будет установлена последняя версия от Chocolatey
+Community.  Список доступных версии приведён:
 [https://community.chocolatey.org/packages/pelles-c](https://community.chocolatey.org/packages/pelles-c).
+
+# Результаты
+
+Если параметр `cmake-module` не был равен `no`:
+
+- CMAKE_ROOT - Полный путь к каталогу установки модулей PellesC;
+- CMAKE_COMMAND - Полный путь команды `cmake`.
 
 # Участие
 Замечания (issues), добавления или исправления (pr) - принимаются и
