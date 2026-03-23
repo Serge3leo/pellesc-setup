@@ -4,7 +4,7 @@
 
 cmake_minimum_required (VERSION 3.25)
 project(pellesc_setup
-        VERSION 0.3.0
+        VERSION 0.6.0
         DESCRIPTION
         "Use PellesC in CMake project"
         HOMEPAGE_URL https://github.com/Serge3leo/pellesc-setup.git

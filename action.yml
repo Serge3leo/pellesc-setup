@@ -92,7 +92,7 @@ runs:
       id: pd
       shell: pwsh
       run: |
-        $key = "${{ inputs.key-prefix }}_PellesC_${{ inputs.version }}_0.3_"
+        $key = "${{ inputs.key-prefix }}_PellesC_${{ inputs.version }}_0.6_"
         if ("" -eq "${{ inputs.location }}") {
           $pd = "C:\Program Files\PellesC"
           $sa = ""
