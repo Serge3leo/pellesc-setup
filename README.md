@@ -73,7 +73,7 @@ C compiler).
 
 ## cmake-module
   - Type: `string`
-  - Allowed values: `check | always | not`
+  - Allowed values: `check | always | no`
   - Default: `check`
 
 ### always

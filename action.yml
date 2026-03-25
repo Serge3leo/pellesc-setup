@@ -49,27 +49,33 @@ runs:
   using: composite
   steps:
     - name: Check Windows version compatible with PellesC CMake modules
-      if: ${{ 'no' != inputs.cmake-module && '' != inputs.version }}
+      if: inputs.cmake-module != 'no'
       shell: pwsh
       run: |
-        if ($${{ fromJSON(inputs.verbose) }}) {
-          [System.Environment]::OSVersion
-        }
-        $pv = "${{ inputs.version }}" -replace "[^0-9.].*$"
-        $pw11 = "13.0"
-        $w11bld = 22000
-        if (([version]$pv -lt [version]$pw11) -and
-            ([System.Environment]::OSVersion.Version.Build -ge $w11bld)) {
-          Write-Error ("PelleC ${{ inputs.version }} CMake modules" + `
-                       " incompatible with Windows " + `
-                       [System.Environment]::OSVersion.Version + "`n" + `
-                       "Use PelleC >= $pw11 or ``cmake-module: 'no'``" + `
-                       " or Windows 10/2022")
+        if ("${{ inputs.cmake-module }}" -cnotmatch "^(always|check|no)") {
+          Write-Error("``cmake-module`` allowed values: ``check|always|no``")
           Exit 1
+        }
+        if ("x" -ne "x${{ inputs.version }}") {
+          if ($${{ fromJSON(inputs.verbose) }}) {
+            [System.Environment]::OSVersion
+          }
+          $pv = "${{ inputs.version }}" -replace "[^0-9.].*$"
+          $pw11 = "13.0"
+          $w11bld = 22000
+          if (([version]$pv -lt [version]$pw11) -and
+              ([System.Environment]::OSVersion.Version.Build -ge $w11bld)) {
+            Write-Error ("PelleC ${{ inputs.version }} CMake modules" + `
+                         " incompatible with Windows " + `
+                         [System.Environment]::OSVersion.Version + "`n" + `
+                         "Use PelleC >= $pw11 or ``cmake-module: 'no'``" + `
+                         " or Windows 10/2022")
+            Exit 1
+          }
         }
 
     - name: Install CMake PellesC modules
-      if: ${{ 'no' != inputs.cmake-module }}
+      if: inputs.cmake-module != 'no'
       shell: pwsh -File {0}
       run: |
         $pm = "$env:GITHUB_ACTION_PATH\PellesC"
@@ -214,7 +220,7 @@ runs:
         }
 
     - id: cmake-report
-      if: ${{ 'no' != inputs.cmake-module }}
+      if: inputs.cmake-module != 'no'
       shell: pwsh
       run: |
         &"${{ inputs.cmake }}" -P "$env:GITHUB_ACTION_PATH\cmake_report.cmake" `

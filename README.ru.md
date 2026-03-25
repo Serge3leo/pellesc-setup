@@ -73,7 +73,7 @@ C).
 
 ## cmake-module
   - Тип: `string`
-  - Допустимые значения: `check | always | not`
+  - Допустимые значения: `check | always | no`
   - Значение по умолчанию: `check`
 
 ### always
