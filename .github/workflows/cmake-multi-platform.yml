@@ -63,7 +63,8 @@ jobs:
           } else {
             $cc = "${{ matrix.c_compiler }}"
           }
-          &$cc hello.c
+          &$cc -Ifirst -Isecond -DTEST_DEFINITIONS `
+            "TEST_DEFINITIONS_VAL=\042Test_1917\042" hello.c
           if ("cc" -ne $cc) {
             polink hello.obj
           }
