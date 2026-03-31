@@ -21,6 +21,7 @@ set_tests_properties(bsd_echo PROPERTIES PASS_REGULAR_EXPRESSION "a b c")
 
 add_executable(hello_INCLUDE hello.c)
 set_target_properties(hello_INCLUDE PROPERTIES EXCLUDE_FROM_ALL TRUE)
+message(VERBOSE "ENV{INCLUDE}=$ENV{INCLUDE}")
 add_test(NAME hello_INCLUDE COMMAND "${CMAKE_COMMAND}" -E
          env "INCLUDE=$ENV{INCLUDE};${CMAKE_CURRENT_SOURCE_DIR}\\first;${CMAKE_CURRENT_SOURCE_DIR}\\second"
          "${CMAKE_CTEST_COMMAND}"
