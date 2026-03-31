@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <hdr.h>
+
 #define STR(A)  #A
 #define DUMP(X) printf(#X "=%s\n", STR(X))
 #define P(N)  ((void)(!strcmp(#N, STR(N)) ? 0 : printf("%s=%s ", #N, STR(N))))
@@ -35,4 +37,5 @@ int main(void) {
     printf("\n---\n");
     DUMP(TEST_DEFINITIONS);
     DUMP(TEST_DEFINITIONS_VAL);
+    printf("Include: %s order\n", HDR_ORDER);
 }

@@ -9,5 +9,14 @@ project(pellesc_setup
         "Use PellesC in CMake project"
         HOMEPAGE_URL https://github.com/Serge3leo/pellesc-setup.git
         LANGUAGES C)
+if (MINGW)
+    message(FATAL_ERROR "PellesC - not MINGW")
+elseif (NOT CMAKE_HOST_WIN32)
+    message(FATAL_ERROR "PellesC - CMAKE_HOST_WIN32 only")
+elseif (NOT WIN32)
+    message(FATAL_ERROR "PellesC - CMAKE_HOST_WIN32 only")
+elseif (NOT CMAKE_C_COMPILER_ID STREQUAL PellesC)
+    message(FATAL_ERROR "PellesC - PellesC only")
+endif ()
 add_subdirectory(tests)
 enable_testing()

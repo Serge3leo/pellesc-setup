@@ -11,6 +11,9 @@ on:  # yamllint disable-line rule:truthy
   pull_request:
     branches: [main]
 
+# env:
+#   VERBOSE: 1
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -19,7 +22,7 @@ jobs:
       fail-fast: true
 
       matrix:
-        version: [11.0.2, 12.0.2, 13.01-git-lfs, 14.0-rc1-git-lfs]
+        version: [11.0.2, 12.0.2, 13.01-git-lfs, 14.0-rc2-git-lfs]
         os: [windows-latest, windows-2022]
         c_compiler: ['', pocc]
         build_type: [Release]
@@ -63,7 +66,8 @@ jobs:
           } else {
             $cc = "${{ matrix.c_compiler }}"
           }
-          &$cc hello.c
+          &$cc -Ifirst -Isecond -DTEST_DEFINITIONS `
+            "-DTEST_DEFINITIONS_VAL=\042Test_1917\042" hello.c
           if ("cc" -ne $cc) {
             polink hello.obj
           }

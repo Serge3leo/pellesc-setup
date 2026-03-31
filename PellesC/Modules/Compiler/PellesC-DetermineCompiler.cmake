@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
 
-# Pelles C bug (TODO: ID & versions), TODO: I can try `cc -x`
+# Pelles C bug warning, if failed first detection iteration
 string(TOLOWER "${CMAKE_C_COMPILER}" _pellesc_lower_)
 if (WIN32 AND "${_pellesc_lower_}" MATCHES "pelles.*c.*bin.*cc"
     AND "${_pellesc_lower_}" MATCHES " "
