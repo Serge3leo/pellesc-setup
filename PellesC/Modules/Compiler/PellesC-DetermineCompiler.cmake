@@ -1,6 +1,5 @@
-# vim:set sw=2 ts=8 et fileencoding=utf8:
-# SPDX-License-Identifier: BSD-2-Clause
-# SPDX-FileCopyrightText: 2026 Сергей Леонтьев (leo@sai.msu.ru)
+# Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
+# file LICENSE.rst or https://cmake.org/licensing for details.
 
 # Pelles C bug warning, if failed first detection iteration
 string(TOLOWER "${CMAKE_C_COMPILER}" _pellesc_lower_)
