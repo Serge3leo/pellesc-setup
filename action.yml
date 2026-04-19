@@ -37,7 +37,7 @@ inputs:
     required: false
     description: >-
       A specific version to install. Defaults to GitHub mirrored.
-    default: '13.01-git-lfs'
+    default: '14.00-git-lfs'
 outputs:
   CMAKE_COMMAND:
     description: The full path to the `cmake` executable
