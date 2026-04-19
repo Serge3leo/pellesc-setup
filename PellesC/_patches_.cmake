@@ -34,3 +34,18 @@ set(DetermineASM_replace "\\1
 set(DetermineASM_rev_match "(\n[ \t]+${ASM_PREV}[ \t]*\n).*#.*patch.*\n([ \t]+${ASM_NEXT}[ \t]*\n)")
 set(DetermineASM_rev_replace "\\1\\2")
 set(DetermineASM_detect "${ID_PELLESC}")
+
+set(FindBinUtils_module "CMakeFindBinUtils.cmake")
+set(FBU_PREV "list.APPEND _CMAKE_TOOL_VARS LINKER AR.[ \t]*\n")  # CMake 3.21
+set(FBU_NEXT "elseif..x.{CMAKE_.{_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}. MATCHES ..xIAR...")  # CMake 3.22
+set(FindBinUtils_match "(\n[ \t]+${FBU_PREV}[ \t]*\n)([ \t]*${FBU_NEXT}[ \t]*\n)")
+set(FindBinUtils_replace "\\1
+  # pellesc-setup patch
+elseif(\"x\${CMAKE_\${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}\" STREQUAL \"x${ID_PELLESC}\")
+  set(_CMAKE_LINKER_NAMES \"polink\")
+  set(_CMAKE_AR_NAMES \"ar\")  # FIXME: polib can't create library with `.res` files
+  list(APPEND _CMAKE_TOOL_VARS LINKER AR)
+\n\\2")
+set(FindBinUtils_rev_match "(\n[ \t]+${FBU_PREV}[ \t]*\n).*#.*patch.*\n([ \t]*${FBU_NEXT}[ \t]*\n)")
+set(FindBinUtils_rev_replace "\\1\\2")
+set(FindBinUtils_detect "${ID_PELLESC}")
