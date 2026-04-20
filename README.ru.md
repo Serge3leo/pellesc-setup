@@ -120,7 +120,7 @@ Pelles C, для существующих версий `C:\Program Files\PellesC
 
 Если не задан, устанавливается версия `14.00-git-lfs` из этого репозитория
 (14.00, 7 Апр 2026, [https://www.pellesc.se](https://www.pellesc.se)), которой
-нет у Chocolatey Community).  Иначе будет установлена указанная версия.  При
+нет у Chocolatey Community.  Иначе будет установлена указанная версия.  При
 явном задании пустого значения, будет установлена последняя версия от Chocolatey
 Community.  Список доступных версии приведён:
 [https://community.chocolatey.org/packages/pelles-c](https://community.chocolatey.org/packages/pelles-c).

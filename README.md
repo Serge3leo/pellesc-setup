@@ -122,7 +122,7 @@ Show the paths and versions of the main components: `pocc`, `make`, `cmake`, ...
 
 If not specified, version `14.00-git-lfs` from this repository is installed
 (14.00, Apr 7, 2026, [https://www.pellesc.se](https://www.pellesc.se)), it not
-at Chocolatey Community).  Otherwise, the specified version will be installed.
+at Chocolatey Community.  Otherwise, the specified version will be installed.
 If you explicitly set an empty value, the latest version from Chocolatey
 Community will be installed.  The list of available versions is given below:
 [https://community.chocolatey.org/packages/pelles-c](https://community.chocolatey.org/packages/pelles-c).

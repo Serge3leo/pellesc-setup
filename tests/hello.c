@@ -25,6 +25,7 @@ int main(void) {
     P2(__NVCOMPILER_MAJOR__, __NVCOMPILER_MINOR__);
     P(__ORANGEC__);
     P(__POCC__);
+    P(__POCC_STDC_VERSION__);
     P(__SUNPRO_C);
     P(__SUNPRO_CC);
     P(__TINYC__);

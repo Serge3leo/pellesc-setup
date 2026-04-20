@@ -1,4 +1,5 @@
-# Based on `Platform/Windows-MSVC.cmake` and Pelles C `.ppj` templates
+# Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
+# file LICENSE.rst or https://cmake.org/licensing for details.
 
 include (Compiler/CMakeCommonCompilerMacros)
 include (Compiler/PellesC)
@@ -7,6 +8,8 @@ __compiler_pellesc(C)
 set(CMAKE_C_OUTPUT_EXTENSION ".obj")
 set(CMAKE_C_VERBOSE_FLAG "-V2")
 
+set(CMAKE_C90_STANDARD_COMPILE_OPTION "")  # FIXME: c_function_prototypes register only, Pelles C don't support strict c_std_90
+set(CMAKE_C90_STANDARD__HAS_FULL_SUPPORT ON)
 set(CMAKE_C99_STANDARD_COMPILE_OPTION -std=c99)
 set(CMAKE_C99_EXTENSION_COMPILE_OPTION -D__STDC__=1 -D__STDC_VERSION__=__POCC_STDC_VERSION__ -Ze -Zx -std=c99)
 set(CMAKE_C99_STANDARD__HAS_FULL_SUPPORT ON)

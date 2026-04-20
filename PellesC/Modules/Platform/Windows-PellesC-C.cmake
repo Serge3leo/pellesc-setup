@@ -1,7 +1,5 @@
-# Based on `Platform/Windows-MSVC.cmake` and Pelles C `.ppj` templates
+# Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
+# file LICENSE.rst or https://cmake.org/licensing for details.
 
 include (Platform/Windows-PellesC)
 __windows_compiler_pellesc(C)
-
-# TODO set(CMAKE_C_DEPENDS_USE_COMPILER TRUE), can't write depends to file,
-# `stdout` only.
