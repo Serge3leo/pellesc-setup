@@ -1,4 +1,5 @@
-# Based on `Platform/Windows-MSVC.cmake` and Pelles C `.ppj` templates
+# Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
+# file LICENSE.rst or https://cmake.org/licensing for details.
 include_guard()
 
 set(CMAKE_LIBRARY_PATH_FLAG "-libpath:")
@@ -51,9 +52,6 @@ foreach (t IN ITEMS EXE SHARED MODULE)
 endforeach ()
 
 macro(__windows_compiler_pellesc lang)
-  set(CMAKE_${lang}_LINK_DEF_FILE_FLAG "${CMAKE_LINK_DEF_FILE_FLAG}")
-  set(CMAKE_${lang}_USE_RESPONSE_FILE_FOR_OBJECTS 1)
-
   if ("${lang}" MATCHES "ASM")
     # FIXME: placeholder <FLAGS> set from CFLAGS environment variable
     set(CMAKE_${lang}_COMPILE_OBJECT
