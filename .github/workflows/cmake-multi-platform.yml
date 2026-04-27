@@ -11,8 +11,8 @@ on:  # yamllint disable-line rule:truthy
   pull_request:
     branches: [main]
 
-# env:
-#   VERBOSE: 1
+env:
+  VERBOSE: 1
 
 jobs:
   build:
