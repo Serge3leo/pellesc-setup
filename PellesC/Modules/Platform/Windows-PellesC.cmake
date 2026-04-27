@@ -52,67 +52,29 @@ foreach (t IN ITEMS EXE SHARED MODULE)
 endforeach ()
 
 macro(__windows_compiler_pellesc lang)
-  if ("${lang}" MATCHES "ASM")
-    # FIXME: placeholder <FLAGS> set from CFLAGS environment variable
-    set(CMAKE_${lang}_COMPILE_OBJECT
-      "<CMAKE_${lang}_COMPILER> ${_PELLESC_ASM_FLAGS} <DEFINES> <INCLUDES> <LANGUAGE_COMPILE_FLAGS> -Fo<OBJECT> <SOURCE>")
-  else ()
-   set(CMAKE_${lang}_COMPILE_OBJECT
-      "<CMAKE_${lang}_COMPILER> ${_PELLESC_C_OBJ_FLAGS} <DEFINES> <INCLUDES> <FLAGS> -Fo<OBJECT> -c <SOURCE>")
-  endif ()
+  set(CMAKE_${lang}_CREATE_STATIC_LIBRARY "<CMAKE_AR> <LINK_FLAGS> -out:<TARGET> <OBJECTS>")
 
   set(CMAKE_${lang}_CREATE_SHARED_LIBRARY
     "<CMAKE_LINKER> <OBJECTS> ${CMAKE_START_TEMP_FILE} -out:<TARGET> -implib:<TARGET_IMPLIB> -dll -version:<TARGET_VERSION_MAJOR>.<TARGET_VERSION_MINOR> ${_PELLESC_LINK_FLAGS} <LINK_FLAGS> <LINK_LIBRARIES> ${CMAKE_END_TEMP_FILE}")
   set(CMAKE_${lang}_CREATE_SHARED_MODULE "${CMAKE_${lang}_CREATE_SHARED_LIBRARY}")
   set(CMAKE_SHARED_LIBRARY_CREATE_${lang}_FLAGS "")
 
-  set(CMAKE_${lang}_LINK_DEF_FILE_FLAG "${CMAKE_LINK_DEF_FILE_FLAG}")
   set(CMAKE_${lang}_USE_RESPONSE_FILE_FOR_OBJECTS 1)
   set(CMAKE_${lang}_LINK_EXECUTABLE
     "<CMAKE_LINKER> <OBJECTS> ${CMAKE_START_TEMP_FILE} -out:<TARGET> -implib:<TARGET_IMPLIB> -version:<TARGET_VERSION_MAJOR>.<TARGET_VERSION_MINOR> ${_PELLESC_LINK_FLAGS} <LINK_FLAGS> <LINK_LIBRARIES> ${CMAKE_END_TEMP_FILE}")
 
+  set(CMAKE_${lang}_LINK_DEF_FILE_FLAG "${CMAKE_LINK_DEF_FILE_FLAG}")
+
   set(CMAKE_${lang}_CREATE_WIN32_EXE "-subsystem:windows")
   set(CMAKE_${lang}_CREATE_CONSOLE_EXE "-subsystem:console")
 
-  set(CMAKE_${lang}_CREATE_PREPROCESSED_SOURCE
-    "<CMAKE_${lang}_COMPILER> > <PREPROCESSED_SOURCE> <DEFINES> <INCLUDES> <FLAGS> -E <SOURCE>")
-
-  set(CMAKE_${lang}_CREATE_ASSEMBLY_SOURCE
-    "<CMAKE_${lang}_COMPILER> ${_PELLESC_C_ASM_FLAGS} <DEFINES> <INCLUDES> <FLAGS> -Fo<ASSEMBLY_SOURCE> <SOURCE>")
-
-  if ("${lang}" MATCHES "ASM")
-    string(APPEND CMAKE_${lang}_FLAGS_DEBUG_INIT "-Zi")
-    string(APPEND CMAKE_${lang}_FLAGS_RELEASE_INIT )
-    string(APPEND CMAKE_${lang}_FLAGS_RELWITHDEBINFO_INIT "-Zi")
-    string(APPEND CMAKE_${lang}_FLAGS_MINSIZEREL_INIT )
-  else ()
-    string(APPEND CMAKE_${lang}_FLAGS_DEBUG_INIT "-Zi -Ob0")
-    string(APPEND CMAKE_${lang}_FLAGS_RELEASE_INIT "-Ot -Ob2 -DNDEBUG=1")
-    string(APPEND CMAKE_${lang}_FLAGS_RELWITHDEBINFO_INIT "-Zi -Ot -Ob1 -DNDEBUG=1")
-    string(APPEND CMAKE_${lang}_FLAGS_MINSIZEREL_INIT "-Os -Ob1 -DNDEBUG=1")
-  endif ()
-
-  # TODO define generic information about compiler dependencies
-  # set(CMAKE_DEPFILE_FLAGS_${lang} "-M -Fo<DEP_TARGET> > <DEP_FILE>")
-  # set(CMAKE_${lang}_DEPFILE_FORMAT gcc)
-
-  # linker selection
   cmake_path(GET CMAKE_${lang}_COMPILER PARENT_PATH __PellesC_Path)
   set(CMAKE_LINKER "${__PellesC_Path}/polink")
   set(CMAKE_${lang}_USING_LINKER_SYSTEM "${CMAKE_LINKER}")
   set(CMAKE_${lang}_USING_LINKER_MSVC "${CMAKE_LINKER}")
 
-  if (NOT CMAKE_ASM_COMPILER)
-    set(CMAKE_ASM_COMPILER "${__PellesC_Path}/poasm.exe")
-  endif ()
-
-  # RC
-  if (NOT CMAKE_RC_COMPILER_INIT)
+  if(NOT CMAKE_RC_COMPILER_INIT)
     set(CMAKE_RC_COMPILER_INIT porc)
-  endif ()
-  if (NOT CMAKE_RC_COMPILE_OBJECT)
-    set(CMAKE_RC_COMPILE_OBJECT
-      "<CMAKE_RC_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -Fo<OBJECT> <SOURCE>")
-  endif ()
+  endif()
   enable_language(RC)
 endmacro()
