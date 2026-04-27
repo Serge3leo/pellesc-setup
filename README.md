@@ -118,10 +118,10 @@ Show the paths and versions of the main components: `pocc`, `make`, `cmake`, ...
 
 ## version
   - Type: `string`
-  - Default: `14.00-git-lfs`
+  - Default: `14.10-git-lfs`
 
-If not specified, version `14.00-git-lfs` from this repository is installed
-(14.00, Apr 7, 2026, [https://www.pellesc.se](https://www.pellesc.se)), it not
+If not specified, version `14.10-git-lfs` from this repository is installed
+(14.10, Apr 24, 2026, [https://www.pellesc.se](https://www.pellesc.se)), it not
 at Chocolatey Community.  Otherwise, the specified version will be installed.
 If you explicitly set an empty value, the latest version from Chocolatey
 Community will be installed.  The list of available versions is given below:
