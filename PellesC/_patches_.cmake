@@ -35,6 +35,14 @@ set(DetermineASM_rev_match "(\n[ \t]+${ASM_PREV}[ \t]*\n).*#.*patch.*\n([ \t]+${
 set(DetermineASM_rev_replace "\\1\\2")
 set(DetermineASM_detect "${ID_PELLESC}")
 
+set(DetermineASM1_module "CMakeDetermineASMCompiler.cmake")
+set(DetermineASM1_match "([ \t]*\n[ \t]*)set._CMAKE_PROCESSING_LANGUAGE .ASM..([ \t]*\n[ \t]*include.CMakeFindBinUtils.[ \t]*)")
+set(DetermineASM1_replace [=[\1# pellesc-setup patch
+set(_CMAKE_PROCESSING_LANGUAGE "ASM${ASM_DIALECT}")\2]=])
+set(DetermineASM1_rev_match "([ \t]*\n[ \t]*)#[^\n]*patch[^\n]*\nset._CMAKE_PROCESSING_LANGUAGE .ASM..ASM_DIALECT...([ \t]*\n[ \t]*include.CMakeFindBinUtils.[ \t]*)")
+set(DetermineASM1_rev_replace [=[\1set(_CMAKE_PROCESSING_LANGUAGE "ASM")\2]=])
+set(DetermineASM1_detect "set.[ \t]*_CMAKE_PROCESSING_LANGUAGE[ \t]+.ASM..ASM_DIALECT")
+
 set(FindBinUtils_module "CMakeFindBinUtils.cmake")
 set(FBU_PREV "list.APPEND _CMAKE_TOOL_VARS LINKER AR.[ \t]*\n")  # CMake 3.21
 set(FBU_NEXT "elseif..x.{CMAKE_.{_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}. MATCHES ..xIAR...")  # CMake 3.22
@@ -43,7 +51,7 @@ set(FindBinUtils_replace "\\1
   # pellesc-setup patch
 elseif(\"x\${CMAKE_\${_CMAKE_PROCESSING_LANGUAGE}_COMPILER_ID}\" STREQUAL \"x${ID_PELLESC}\")
   set(_CMAKE_LINKER_NAMES \"polink\")
-  set(_CMAKE_AR_NAMES \"ar\")  # FIXME: polib can't create library with `.res` files
+  set(_CMAKE_AR_NAMES \"polib\")
   list(APPEND _CMAKE_TOOL_VARS LINKER AR)
 \n\\2")
 set(FindBinUtils_rev_match "(\n[ \t]+${FBU_PREV}[ \t]*\n).*#.*patch.*\n([ \t]*${FBU_NEXT}[ \t]*\n)")

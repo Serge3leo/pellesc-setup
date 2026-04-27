@@ -96,3 +96,14 @@ jobs:
           cd build\tests
           .\hello
           .\bsd_echo my args
+
+      - name: Check 32-bit
+        shell: cmd
+        run: |
+          set LIB=
+          call povars32.bat
+          if errorlevel 1 exit /b
+          call clean-build.bat
+          if errorlevel 1 exit /b
+          call run-build-test.bat
+          if errorlevel 1 exit /b
